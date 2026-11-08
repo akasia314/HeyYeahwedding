@@ -1,733 +1,11 @@
 <!DOCTYPE html>
-<html lang="ko"><head><script data-bard-client-injected="true">(function(firebaseConfig, initialAuthToken, appId) {
-        window.__firebase_config = firebaseConfig;
-        window.__initial_auth_token = initialAuthToken;
-        window.__app_id = appId;
-            })("\n{\n  \"apiKey\": \"AIzaSyCqyCcs2R2e7AegGjvFAwG98wlamtbHvZY\",\n  \"authDomain\": \"bard-frontend.firebaseapp.com\",\n  \"projectId\": \"bard-frontend\",\n  \"storageBucket\": \"bard-frontend.firebasestorage.app\",\n  \"messagingSenderId\": \"175205271074\",\n  \"appId\": \"1:175205271074:web:2b7bd4d34d33bf38e6ec7b\"\n}\n","eyJhbGciOiJSUzI1NiIsImtpZCI6IjExNjRiNzdiNDMzZDdhMDAyMWI4NjE4YjhjYTU3ZTMyZGI5MWUxMTMiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJmaXJlYmFzZS1hZG1pbnNkay1mYnN2Y0BiYXJkLWZyb250ZW5kLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwiYXVkIjoiaHR0cHM6Ly9pZGVudGl0eXRvb2xraXQuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLmlkZW50aXR5LmlkZW50aXR5dG9vbGtpdC52MS5JZGVudGl0eVRvb2xraXQiLCJ1aWQiOiIwMjM3MjkzMjYyNzY5NjkyMTE0OCIsImlzcyI6ImZpcmViYXNlLWFkbWluc2RrLWZic3ZjQGJhcmQtZnJvbnRlbmQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGFpbXMiOnsiYXBwSWQiOiJjXzM3YjY5ODE3NDk2ZTRhMDZfaW5kZXguaHRtbC05NjgifSwiZXhwIjoxNzk0MTMyMDg1LCJpYXQiOjE3OTQxMjg0ODUsImFsZyI6IlJTMjU2In0.EHPAVUYtEY7KdeSByZD0_z-ol-Hbflk2mG0FZJ9A2_Yp5nT-kGK0mSOz4S7RmGSOVGNjQIWxhNQADIEuftp4hR_3AJf15ZdyLQMyjSYh4B-__HfoM3KHhkxt655oMNMvN_2j7KgmN072HwSZJuPH9zWAFCEzgSAgY497FAX9u8Z9UH2opHKqtYbJMte56r6v78y3l2KUKFOJ9pLCBmZUQ3CX7htxkasJujPMb9q4Z7RE9eC83Ind_xycKLLtZN-cOT6hh7JBRs0ux9bcoFxgy5qi8IrOsVBkdFPkPFP5asZzHRsmabTvNdr19VA7d7a_n_C1V4pLvkYgnjBN5sxQEA","c_37b69817496e4a06_index.html-968")</script><script data-bard-client-injected="true">
-  document.addEventListener('input', (event) => {
-    if (event.target && (event.target.isContentEditable || event.target.hasAttribute('contenteditable'))) {
-      const clonedDoc = document.cloneNode(true);
-      const injectedScripts = clonedDoc.querySelectorAll('[data-bard-client-injected="true"]');
-      injectedScripts.forEach(el => el.remove());
-      window.parent.postMessage({
-        type: 'inlineEdit',
-        html: '<!DOCTYPE html>\n' + clonedDoc.documentElement.outerHTML
-      }, '*');
-    }
-  });
-</script><script data-bard-client-injected="true">(function(){'use strict';window.addEventListener("message",a=>{a.data&&a.data.type==="SUPPLEMENTAL_DATA_UPDATE"&&window.dispatchEvent(new CustomEvent("supplementaldataupdate",{detail:a.data.data}))});}).call(this);
-</script><script data-bard-client-injected="true">(function() {
-  const SCROLL_KEYS = new Set([
-    'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
-    ' ', 'Spacebar', 'PageUp', 'PageDown', 'Home', 'End',
-  ]);
-  const HORIZONTAL_KEYS = new Set(['ArrowLeft', 'ArrowRight']);
-
-  function isTextEntryTarget(target) {
-    if (!target) return false;
-    const tagName = target.tagName;
-    return tagName === 'INPUT' || tagName === 'TEXTAREA' ||
-        tagName === 'SELECT' || target.isContentEditable === true;
-  }
-
-  // An element absorbs the key only if it both overflows on the axis being
-  // scrolled and is configured to scroll on that axis. The cheap dimension
-  // test runs first because getComputedStyle forces a style recalc, and this
-  // runs on every keypress. Each axis is read from its own longhand: the
-  // 'overflow' shorthand serializes as two values when the axes differ, which
-  // is the common 'overflow-x: hidden; overflow-y: auto' pane.
-  function canScroll(node, horizontal) {
-    const overflows = horizontal ? node.scrollWidth > node.clientWidth
-                                 : node.scrollHeight > node.clientHeight;
-    if (!overflows) return false;
-    const style = window.getComputedStyle(node);
-    const overflow = horizontal ? style.overflowX : style.overflowY;
-    return overflow === 'auto' || overflow === 'scroll';
-  }
-
-  // Walks up from the event target so nested scrollers keep their behavior.
-  // <body> is included because pages that pin the root height make it the
-  // scroll container.
-  function hasScrollableAncestor(target, horizontal) {
-    let node = target;
-    while (node && node !== document.documentElement) {
-      if (canScroll(node, horizontal)) return true;
-      node = node.parentElement;
-    }
-    return false;
-  }
-
-  function rootCanScroll(horizontal) {
-    const scroller = document.scrollingElement || document.documentElement;
-    if (!scroller) return false;
-    // Tolerate a pixel of rounding so subpixel layouts do not look scrollable.
-    return horizontal ? scroller.scrollWidth > window.innerWidth + 1
-                      : scroller.scrollHeight > window.innerHeight + 1;
-  }
-
-  window.addEventListener('keydown', function(event) {
-    if (!SCROLL_KEYS.has(event.key)) return;
-    if (event.defaultPrevented) return;
-    // Alt and Meta turn arrows into browser history navigation, and Ctrl is
-    // reserved for shortcuts, so none of them are scroll intent.
-    if (event.altKey || event.metaKey || event.ctrlKey) return;
-
-    const target = event.target;
-    if (isTextEntryTarget(target)) return;
-
-    // Anything that can still absorb the scroll gets to keep it.
-    const horizontal = HORIZONTAL_KEYS.has(event.key);
-    if (rootCanScroll(horizontal)) return;
-    if (hasScrollableAncestor(target, horizontal)) return;
-
-    event.preventDefault();
-  }, {capture: true, passive: false});
-})();</script><script data-bard-client-injected="true">(function() {
-  // Ensure this script is executed only once
-  if (window.firebaseAuthBridgeScriptLoaded) {
-    return;
-  }
-  window.firebaseAuthBridgeScriptLoaded = true;
-
-  let nextTokenPromiseId = 0;
-
-  // Stores { resolve, reject } for ongoing token requests
-  const pendingTokenPromises = {};
-
-  // Listen for messages from the Host Application
-  window.addEventListener('message', function(event) {
-
-    const messageData = event.data;
-
-  if (messageData && messageData.type === 'RESOLVE_NEW_FIREBASE_TOKEN') {
-      const { success, token, error, promiseId } = messageData ?? {};
-      if (pendingTokenPromises[promiseId]) {
-        if (success) {
-          pendingTokenPromises[promiseId].resolve(token);
-        } else {
-          pendingTokenPromises[promiseId].reject(new Error(error || 'Token refresh failed from host.'));
-        }
-        delete pendingTokenPromises[promiseId];
-      }
-    }
-  });
-
-  // Expose a function for the Generated App to request a new Firebase token
-  window.requestNewFirebaseToken = function() {
-    const currentPromiseId = nextTokenPromiseId++;
-    const promise = new Promise((resolve, reject) => {
-      pendingTokenPromises[currentPromiseId] = { resolve, reject };
-    });
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({
-        type: 'REQUEST_NEW_FIREBASE_TOKEN',
-        promiseId: currentPromiseId
-      }, '*');
-    } else {
-      pendingTokenPromises[currentPromiseId].reject(new Error('No parent window to request token from.'));
-      delete pendingTokenPromises[currentPromiseId];
-    }
-    return promise;
-  };
-})();</script><script data-bard-client-injected="true">
-let realOriginalGetUserMedia = null;
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-  realOriginalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
-}
-
-(function() {
-  if (navigator.mediaDevices && navigator.mediaDevices.__proto__) {
-    try {
-      Object.defineProperty(navigator.mediaDevices.__proto__, 'getUserMedia', {
-        get: function() {
-          return undefined; // Or throw an error
-        },
-        configurable: false
-      });
-    } catch (error) {
-      console.error("Error defining prototype getter:", error);
-    }
-  }
-})();
-
-(function() {
-  const pendingMediaResolvers = {};
-  let nextMediaPromiseId = 0;
-
-  function requestMediaPermissions(constraints) {
-    const mediaPromiseId = nextMediaPromiseId++;
-    const promise = new Promise((resolve, reject) => {
-      pendingMediaResolvers[mediaPromiseId] = (granted) => {
-        delete pendingMediaResolvers[mediaPromiseId];
-        resolve(granted);
-      };
-    });
-
-    window.parent.postMessage({
-      type: 'requestMediaPermission',
-      constraints: constraints,
-      promiseId: mediaPromiseId,
-    }, '*');
-
-    return promise;
-  }
-
-  let originalGetUserMedia = realOriginalGetUserMedia;
-
-  function interceptGetUserMedia() {
-    if (navigator.mediaDevices) {
-      Object.defineProperty(navigator.mediaDevices, 'getUserMedia', {
-        value: function(constraints) {
-          return requestMediaPermissions(constraints).then((granted) => {
-            if (granted) {
-              if (originalGetUserMedia) {
-                return originalGetUserMedia(constraints);
-              } else {
-                throw new Error("Original getUserMedia not available.");
-              }
-            } else {
-              throw new DOMException('Permission denied', 'NotAllowedError');
-            }
-          });
-        },
-        writable: false,
-        configurable: false
-      });
-    }
-  }
-
-  interceptGetUserMedia();
-
-  const observer = new MutationObserver(function(mutationsList, observer) {
-    for (const mutation of mutationsList) {
-      if (mutation.type === 'reconfigured' && mutation.name === 'getUserMedia' && mutation.object === navigator.mediaDevices) {
-        interceptGetUserMedia();
-      } else if (mutation.type === 'attributes' && mutation.attributeName === 'getUserMedia' && mutation.target === navigator.mediaDevices) {
-        interceptGetUserMedia();
-      } else if (mutation.type === 'childList' && mutation.addedNodes) {
-        mutation.addedNodes.forEach(node => {
-          if (node === navigator.mediaDevices) {
-            interceptGetUserMedia();
-          }
-        });
-      }
-    }
-  });
-
-  function interceptSpeechRecognition() {
-    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-      return;
-    }
-
-    const OriginalSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    const SpeechRecognitionWrapper = function(...args) {
-      const recognizer = new OriginalSpeechRecognition(...args);
-      const originalStart = recognizer.start.bind(recognizer);
-
-      recognizer.start = function() {
-        requestMediaPermissions({ audio: true }).then(granted => {
-          if (granted) {
-            originalStart();
-          } else {
-            const errorEvent = new SpeechRecognitionErrorEvent('error');
-            errorEvent.error = 'not-allowed'; // This is the standard error for permission denial.
-            recognizer.dispatchEvent(errorEvent);
-          }
-        });
-      };
-
-      return recognizer;
-    };
-
-    SpeechRecognitionWrapper.prototype = OriginalSpeechRecognition.prototype;
-    SpeechRecognitionWrapper.prototype.constructor = SpeechRecognitionWrapper;
-
-    if (window.SpeechRecognition) {
-      window.SpeechRecognition = SpeechRecognitionWrapper;
-    }
-    if (window.webkitSpeechRecognition) {
-      window.webkitSpeechRecognition = SpeechRecognitionWrapper;
-    }
-  }
-
-  interceptSpeechRecognition();
-
-  window.addEventListener('message', function(event) {
-    if (event.data) {
-      if (event.data.type === 'resolveMediaPermission') {
-        const { promiseId, granted } = event.data;
-        if (pendingMediaResolvers[promiseId]) {
-          pendingMediaResolvers[promiseId](granted);
-        }
-      }
-    }
-  });
-
-})();</script><script ws-interception-config="{&quot;parentOrigin&quot;:&quot;https://gemini.google.com&quot;,&quot;proxiedDomains&quot;:[]}" data-bard-client-injected="true">(function(){'use strict';var u=typeof Object.defineProperties=="function"?Object.defineProperty:function(b,d,e){if(b==Array.prototype||b==Object.prototype)return b;b[d]=e.value;return b};function v(b){b=["object"==typeof globalThis&&globalThis,b,"object"==typeof window&&window,"object"==typeof self&&self,"object"==typeof global&&global];for(var d=0;d<b.length;++d){var e=b[d];if(e&&e.Math==Math)return e}throw Error("Cannot find global object");}var w=v(this);
-function y(b,d){if(d)a:{var e=w;b=b.split(".");for(var h=0;h<b.length-1;h++){var k=b[h];if(!(k in e))break a;e=e[k]}b=b[b.length-1];h=e[b];d=d(h);d!=h&&d!=null&&u(e,b,{configurable:!0,writable:!0,value:d})}}function z(b){function d(h){return b.next(h)}function e(h){return b.throw(h)}return new Promise(function(h,k){function m(n){n.done?h(n.value):Promise.resolve(n.value).then(d,e).then(m,k)}m(b.next())})}y("globalThis",function(b){return b||w});/*
-
- Copyright The Closure Library Authors.
- SPDX-License-Identifier: Apache-2.0
-*/
-function A(b,d){function e(){}e.prototype=d.prototype;b.j=d.prototype;b.prototype=new e;b.prototype.constructor=b;b.h=function(h,k,m){for(var n=Array(arguments.length-2),p=2;p<arguments.length;p++)n[p-2]=arguments[p];return d.prototype[k].apply(h,n)}};function B(b,d,e="*"){function h(a){if(typeof a==="string")return F.encode(a).buffer;if(a instanceof ArrayBuffer)return a.slice(0);if(ArrayBuffer.isView(a))return a.buffer.slice(a.byteOffset,a.byteOffset+a.byteLength);throw Error("Invalid data type");}function k(a){a=h(a);var f={type:"send",data:new Uint8Array(a)},g;(g=r)==null||g.postMessage(f,[a])}function m(){if(!r)throw Error("Data port not captured yet.");r.onmessage=a=>{if(a.data.type==="message"){a=new MessageEvent("message",{data:G.decode(a.data.data)});
-let f;(f=c.onmessage)==null||f.call(c,a);c.dispatchEvent(a)}}}function n(){if(!t)throw Error("Control port not captured yet.");t.onmessage=a=>{switch(a.data.type){case "open":l=1;var f=new Event("open"),g;(g=c.onopen)==null||g.call(c,f);c.dispatchEvent(f);q.forEach(H=>{k(H)});q=[];break;case "close":g=a.data;l=3;g=new CloseEvent("close",{code:g.code,reason:g.reason,wasClean:g.wasClean});(f=c.onclose)==null||f.call(c,g);c.dispatchEvent(g);break;case "error":l=3;f=new Event("error");let x;(x=c.onerror)==
-null||x.call(c,f);c.dispatchEvent(f)}}}function p(a){return z(function*(){var f=new MessageChannel;t=f.port1;var g=new MessageChannel;r=g.port1;n();m();window.parent.postMessage({type:"websocket_open",portOrdering:["control","data"],url:b,protocols:a||[],connectionId:I},e,[f.port2,g.port2])}())}var c=Reflect.construct(EventTarget,[],new.target);c.CONNECTING=0;c.OPEN=1;c.CLOSING=2;c.CLOSED=3;c.url=b;c.binaryType="arraybuffer";c.protocol="";c.i="";var l=0,t=null,r=null,q=[],F=new TextEncoder,G=new TextDecoder;
-c.onopen=null;c.onmessage=null;c.onclose=null;c.onerror=null;Object.defineProperty(c,"readyState",{get:()=>l,enumerable:!0,configurable:!0});Object.defineProperty(c,"bufferedAmount",{get:()=>{var a=0;q.forEach(f=>{a+=typeof f==="string"?f.length:f.byteLength});return a},enumerable:!0,configurable:!0});var I=function(){var a;return((a=globalThis.crypto)==null?0:a.randomUUID)?globalThis.crypto.randomUUID():"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,f=>{var g=Math.random()*16|0;return(f===
-"x"?g:g&3|8).toString(16)})}();c.send=a=>{if(l===1)a instanceof Blob?a.arrayBuffer().then(f=>{k(f)}):k(a);else if(l===0)if(typeof a==="string")q.push(a);else if(a instanceof ArrayBuffer||ArrayBuffer.isView(a))q.push(h(a));else throw Error("Sending Blob is not supported before the connection is open.");else console.debug("WebSocket send called in CLOSING or CLOSED state; ignored.")};c.close=(a=1E3,f="")=>{if(l!==2&&l!==3){l=2;a={type:"close",code:a,reason:f,wasClean:a===1E3};var g;(g=t)==null||g.postMessage(a)}};
-Promise.resolve().then(()=>p(d));return c}A(B,EventTarget);var C=document.currentScript,D=C==null?void 0:C.getAttribute("ws-interception-config");if(!D)throw Error("WebSocket Interceptor: Missing ws-interception-config attribute in the script tag.");var E=JSON.parse(D);if(!E.parentOrigin||typeof E.parentOrigin!=="string")throw Error("WebSocket Interceptor: Invalid parentOrigin in ws-interception-config");
-(function(b){var d=Object.getOwnPropertyDescriptor(window,"WebSocket");if(!d||d.writable||d.configurable)d=Object.assign(function(e,h){try{let k=(new URL(e)).hostname;if(b.proxiedDomains.some(m=>k===m||k.endsWith(`.${m}`)))return new B(e,h,b.parentOrigin)}catch(k){throw window.parent.postMessage({type:"websocket_blocked",url:e,reason:"blocked_invalid_url"},b.parentOrigin),new DOMException(`WebSocket connection to '${e}' is not allowed in Canvas.`,"SecurityError");}window.parent.postMessage({type:"websocket_blocked",
-url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMException(`WebSocket connection to '${e}' is not allowed in Canvas.`,"SecurityError");},{CONNECTING:0,OPEN:1,CLOSING:2,CLOSED:3}),Object.defineProperty(window,"WebSocket",{value:d,writable:!1,configurable:!1})})({proxiedDomains:E.proxiedDomains||[],parentOrigin:E.parentOrigin});}).call(this);
-</script><script data-bard-client-injected="true">((function(modelInformation) {
-  const originalFetch = window.fetch;
-  // TODO: b/421908508 - Move these out of the script and match all generative AI model calls.
-  let googleLlmBaseApiUrls = [
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':streamGenerateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':generateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predict',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predictLongRunning',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageEditModelName + ':generateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageTransformModelName + ':generateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predict',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predictLongRunning',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.ttsModelName + ':generateContent',
-  ];
-  modelInformation.deprecatedTextModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-    );
-  });
-  modelInformation.deprecatedImageModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predict',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predictLongRunning',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-    );
-  });
-  modelInformation.deprecatedGenerateImageModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-    );
-  });
-  modelInformation.deprecatedImageTransformModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-    );
-  });
-
-  const pendingFetchResolvers = {};
-  let nextPromiseId = 0;
-
-  function handleStringInput(input, optionsArgument) {
-    const actualUrl = input;
-    const fetchCallArgs = [actualUrl, optionsArgument];
-    const effectiveOptions = optionsArgument || {};
-    const bodyForApiKeyCheck = effectiveOptions.body;
-    const bodyForPostMessage = effectiveOptions.body;
-    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
-  }
-
-  function handleRequestInput(input, optionsArgument) {
-    const actualUrl = input.url;
-    const fetchCallArgs = [input, optionsArgument];
-    const effectiveOptions = { method: input.method, headers: new Headers(input.headers) };
-    let bodyForApiKeyCheck;
-    let bodyForPostMessage;
-
-    if (optionsArgument) {
-      if (optionsArgument.method) effectiveOptions.method = optionsArgument.method;
-      if (optionsArgument.headers) effectiveOptions.headers = new Headers(optionsArgument.headers);
-      if ('body' in optionsArgument) {
-        bodyForApiKeyCheck = optionsArgument.body;
-        bodyForPostMessage = optionsArgument.body;
-      } else {
-        bodyForApiKeyCheck = undefined;
-        bodyForPostMessage = input.body;
-      }
-    } else {
-      bodyForApiKeyCheck = undefined;
-      bodyForPostMessage = input.body;
-    }
-    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
-  }
-
-  window.fetch = function(input, optionsArgument) {
-    let actualUrl;
-    let fetchCallArgs;
-    let effectiveOptions = {};
-    let bodyForApiKeyCheck;
-    let bodyForPostMessage;
-
-    if (typeof input === 'string') {
-      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleStringInput(input, optionsArgument));
-    } else if (input instanceof Request) {
-      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleRequestInput(input, optionsArgument));
-    } else {
-      return originalFetch.apply(window, [input, optionsArgument]);
-    }
-
-    effectiveOptions.method = effectiveOptions.method || 'GET';
-    if (!effectiveOptions.headers) {
-      effectiveOptions.headers = new Headers();
-    }
-
-
-    if (typeof actualUrl === 'string' && googleLlmBaseApiUrls.some((url) => actualUrl.startsWith(url))) {
-      let apiKeyIsNull = true;
-
-      const regex = new RegExp("models/([^:]+)");
-      const modelNameMatch = actualUrl.match(regex);
-      const modelName = modelNameMatch ? modelNameMatch[1] : 'unspecified';
-
-
-      try {
-        const urlObject = new URL(actualUrl);  // Use URL object for robust parsing
-        const apiKeyParam = urlObject.searchParams.get('key');
-        if (apiKeyParam) {
-          apiKeyIsNull = false;
-        }
-      } catch (e) {
-        // Continue checks even if URL parsing fails
-      }
-
-      if (apiKeyIsNull && effectiveOptions.headers) {
-        const h = new Headers(effectiveOptions.headers);
-        const apiKeyHeaderValue = h.get('X-API-Key') || h.get('x-api-key');
-        if (apiKeyHeaderValue) {
-          apiKeyIsNull = false;
-          return originalFetch.apply(window, fetchCallArgs);
-        }
-      }
-
-      if (apiKeyIsNull && effectiveOptions.method && ['POST', 'PUT', 'PATCH'].includes(effectiveOptions.method.toUpperCase()) && typeof bodyForApiKeyCheck === 'string') {
-        try {
-          const bodyData = JSON.parse(bodyForApiKeyCheck);
-          if (bodyData && bodyData.apiKey) {
-            apiKeyIsNull = false;
-            return originalFetch.apply(window, fetchCallArgs);
-          }
-        } catch (e) {
-          // Ignore JSON parsing errors
-        }
-      }
-
-      if(apiKeyIsNull) {
-        const promiseId = nextPromiseId++;
-        const promise = new Promise((resolve) => {
-          pendingFetchResolvers[promiseId] = (resolvedResponse) => {
-            delete pendingFetchResolvers[promiseId];
-            resolve(resolvedResponse);
-          };
-        });
-
-        let serializedBodyForPostMessage;
-        if (typeof bodyForPostMessage === 'string' || bodyForPostMessage == null) {
-            serializedBodyForPostMessage = bodyForPostMessage;
-        } else if (bodyForPostMessage instanceof ReadableStream) {
-            serializedBodyForPostMessage = null;
-        } else {
-            try {
-                serializedBodyForPostMessage = JSON.stringify(bodyForPostMessage);
-            } catch (e) {
-                serializedBodyForPostMessage = null;
-            }
-        }
-
-        const messageOptions = {
-            method: effectiveOptions.method,
-            headers: Object.fromEntries(new Headers(effectiveOptions.headers).entries()),
-            body: serializedBodyForPostMessage
-        };
-
-        window.parent.postMessage({
-          type: 'requestFetch',
-          url: actualUrl,
-          modelName: modelName,
-          options: messageOptions,
-          promiseId: promiseId,
-        }, '*');
-
-        return promise;
-      }
-      return originalFetch.apply(window, fetchCallArgs);
-    }
-    return originalFetch.apply(window, fetchCallArgs);
-  };
-
-  window.addEventListener('message', function(event) {
-    if (event.data && event.data.type === 'resolveFetch') {
-      const { promiseId, response } = event.data;
-      if (pendingFetchResolvers[promiseId]) {
-        try {
-          const reconstructedResponse = new Response(response.body, {
-            status: response.status,
-            statusText: response.statusText,
-            headers: new Headers(response.headers),
-          });
-          pendingFetchResolvers[promiseId](reconstructedResponse);
-        } catch (error) {
-          pendingFetchResolvers[promiseId](new Response(null, { status: 500, statusText: "Interceptor Response Reconstruction Error" }));
-        }
-      }
-    }
-  });
-
-}))({"textModelName":"gemini-3-flash-preview","imageModelName":"imagen-4.0-generate-001","imageEditModelName":"gemini-3.1-flash-image","imageTransformModelName":"gemini-3-pro-image","videoModelName":"veo-2.0-generate-001","ttsModelName":"gemini-2.5-flash-preview-tts","deprecatedTextModelNames":["gemini-2.0-flash","gemini-2.5-flash","gemini-2.5-flash-preview-04-17","gemini-2.5-flash-preview-05-20","gemini-2.5-flash-preview-09-2025"],"deprecatedImageModelNames":["imagen-3.0-generate-001","imagen-3.0-generate-002"],"deprecatedGenerateImageModelNames":["gemini-2.5-flash-image-preview","gemini-2.5-flash-image","gemini-3.1-flash-image-preview"],"deprecatedImageTransformModelNames":["gemini-3-pro-image-preview-11-2025"]})</script><script data-bard-client-injected="true">(function() {
-  function normalizeSlug(str) {
-    try {
-      return str
-        .trim()
-        .toLowerCase()
-        .replace(/[^p{L}p{N}s_-]/gu, '')
-        .replace(/s+/g, '-');
-    } catch (e) {
-      return str
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9s_-]/g, '')
-        .replace(/s+/g, '-');
-    }
-  }
-
-  function findTargetElement(hash) {
-    if (!hash || hash === '#') {
-      return null;
-    }
-    const rawId = hash.startsWith('#') ? hash.slice(1) : hash;
-    let decodedId = rawId;
-    try {
-      decodedId = decodeURIComponent(rawId);
-    } catch (e) {
-      // Ignore URI malformed errors.
-    }
-
-    // 1. Direct ID match (raw and decoded).
-    let target = document.getElementById(rawId) || document.getElementById(decodedId);
-    if (target) {
-      return target;
-    }
-
-    // 2. Name attribute match (<a name="...">).
-    try {
-      if (typeof CSS !== 'undefined' && CSS.escape) {
-        target =
-          document.querySelector('[name="' + CSS.escape(rawId) + '"]') ||
-          document.querySelector('[name="' + CSS.escape(decodedId) + '"]');
-      } else {
-        const namedElements = document.getElementsByName(rawId);
-        if (namedElements && namedElements.length > 0) {
-          return namedElements[0];
-        }
-      }
-    } catch (e) {
-      // Ignore querySelector syntax errors.
-    }
-    if (target) {
-      return target;
-    }
-
-    // 3. Match heading text by slug (for Markdown TOCs where headings lack explicit IDs).
-    const targetSlug = normalizeSlug(decodedId);
-    if (targetSlug) {
-      for (const heading of document.querySelectorAll('h1, h2, h3, h4, h5, h6')) {
-        if (normalizeSlug(heading.textContent || '') === targetSlug) {
-          return heading;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  document.addEventListener('click', function(event) {
-    const target = event.target;
-    const anchor = target && typeof target.closest === 'function' ? target.closest('a') : null;
-    if (!anchor) {
-      return;
-    }
-
-    const href = anchor.getAttribute('href');
-    if (
-      !href ||
-      href.trim().toLowerCase().startsWith('javascript:') ||
-      anchor.hasAttribute('download')
-    ) {
-      return;
-    }
-
-    // Check if the link is an in-page hash / anchor link.
-    if (href.startsWith('#')) {
-      event.preventDefault();
-      const targetElement = findTargetElement(href);
-      if (targetElement) {
-        targetElement.scrollIntoView({behavior: 'smooth', block: 'start'});
-      }
-      return;
-    }
-
-    // Check if the URL has the same origin/pathname but with a hash.
-    try {
-      const url = new URL(anchor.href, window.location.href);
-      if (
-        url.hash &&
-        url.origin === window.location.origin &&
-        url.pathname === window.location.pathname
-      ) {
-        event.preventDefault();
-        const targetElement = findTargetElement(url.hash);
-        if (targetElement) {
-          targetElement.scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
-        return;
-      }
-    } catch (e) {
-      // Fall through if URL parsing fails.
-    }
-
-    // For all external or full navigation links, prevent iframe-level navigation
-    // (which breaks in AGSA WebView or sandboxed iframes) and ensure they open
-    // safely in a new tab/window.
-    if (anchor.target !== '_blank') {
-      event.preventDefault();
-      window.open(anchor.href, '_blank', 'noopener,noreferrer');
-    }
-  }, {capture: true});
-})();</script><script data-bard-client-injected="true">(function(){'use strict';function a(){window.parent.postMessage({type:"interaction"},"*")}window.addEventListener("click",a,{capture:!0,passive:!0});window.addEventListener("touchstart",a,{capture:!0,passive:!0});window.addEventListener("keydown",a,{capture:!0,passive:!0});}).call(this);
-</script><script data-bard-client-injected="true">(function() {
-  const originalConsoleLog = console.log;
-  const originalConsoleError = console.error;
-
-    /**
-   * Normalizes an error event or a promise rejection reason into a structured error object.
-   * @param {*} errorEventOrReason The error object or reason.
-   * @return {object} Structured error data { message, name, stack }.
-   */
-  function getErrorObject(errorEventOrReason) {
-    if (errorEventOrReason instanceof Error) {
-      return {
-        message: errorEventOrReason.message,
-        name: errorEventOrReason.name,
-        stack: errorEventOrReason.stack,
-      };
-    }
-    // Fallback for non-Error objects.
-    try {
-      return {
-        message: JSON.stringify(errorEventOrReason),
-        name: 'UnknownErrorType',
-        stack: null,
-      };
-    } catch (e) {
-      return {
-        message: String(errorEventOrReason),
-        name: 'UnknownErrorTypeNonStringifiable',
-        stack: null,
-      };
-    }
-  }
-
-  /**
-   * Converts an array of arguments (from log/error) into a single string.
-   * Handles Error objects specially to include their message and stack.
-   * @param {Array<*>} args - Arguments passed to console methods.
-   * @return {string} A string representation of the arguments.
-   */
-  function stringifyArgs(args) {
-    return args
-      .map((arg) => {
-        if (arg instanceof Error) {
-          const {message, stack} = arg;
-          return `Error: ${message}${stack ? ('\nStack: ' + stack) : ''}`;
-        }
-        if (typeof arg === 'object' && arg !== null) {
-          try {
-            return JSON.stringify(arg);
-          } catch (error) {
-            return '[Circular Object]';
-          }
-        } else {
-          return String(arg);
-        }
-      })
-      .join(' ');
-  }
-
-  console.log = function(...args) {
-    const logString = stringifyArgs(args);
-    window.parent.postMessage({ type: 'log', message: logString }, '*');
-    originalConsoleLog.apply(console, args);
-  };
-
-  console.error = function(...args) {
-    let errorData;
-    if (args.length > 0 && args[0] instanceof Error) {
-      const err = args[0];
-      // If the first arg is an Error, capture its details.
-      errorData = {
-        type: 'error',
-        source: 'CONSOLE_ERROR',
-        ...getErrorObject(err),
-        rawArgsString: stringifyArgs(args.slice(1)),
-        timestamp: new Date().toISOString(),
-      };
-    } else {
-      // If not an Error object, treat all args as a general error message.
-      errorData = {
-        type: 'error',
-        source: 'CONSOLE_ERROR',
-        message: stringifyArgs(args),
-        name: 'ConsoleLoggedError',
-        stack: null,
-        timestamp: new Date().toISOString(),
-      };
-    }
-    window.parent.postMessage(errorData, '*');
-    originalConsoleError.apply(console, args);
-  };
-
-  // Listen for global unhandled synchronous errors.
-  window.addEventListener('error', function(event) {
-    const errorDetails = event.error ? getErrorObject(event.error) : {
-      message: event.message,
-      name: 'GlobalError',
-      stack: null,
-      filename: event.filename,
-      lineno: event.lineno,
-      colno: event.colno,
-    };
-
-    window.parent.postMessage({
-      type: 'error',
-      source: 'global',
-      ...errorDetails,
-      message: errorDetails.message || event.message,
-      timestamp: new Date().toISOString(),
-    }, '*');
-  });
-
-  // Listen for unhandled promise rejections (asynchronous errors).
-  window.addEventListener('unhandledrejection', function(event) {
-    const errorDetails = getErrorObject(event.reason);
-
-    window.parent.postMessage({
-      type: 'error',
-      source: 'unhandledrejection',
-      ...errorDetails,
-      message: errorDetails.message || 'Unhandled Promise Rejection',
-      timestamp: new Date().toISOString(),
-    }, '*');
-  });
-
-})();</script>
+<html lang="ko">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>김예근 ♥ 손해이 결혼합니다 | 2027. 03. 27</title>
   
-  <!-- 검색엔진·AI 봇 수집 및 캐시/스니펫 노출 원천 차단 (깃허브 Public 배포 시 개인정보 보호) -->
+  <!-- 검색엔진·AI 봇 수집 및 캐시/스니펫 노출 원천 차단 -->
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
   <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
   <meta name="daumoa" content="noindex, nofollow">
@@ -735,7 +13,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
   <meta property="og:type" content="website">
   <meta property="og:title" content="김예근 ♥ 손해이 결혼합니다">
   <meta property="og:description" content="2027년 3월 27일 토요일 오후 6시 · 세인트메리엘 강남">
-  <meta property="og:image" content="GH_02438-0.jpg">
+  <meta property="og:image" content="https://akasia314.github.io/HeyYeahwedding/GH_02438-0.jpg">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -743,7 +21,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
   <!-- Google Fonts: 고운바탕, 나눔명조, Cormorant Garamond, Noto Sans KR -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&amp;family=Gowun+Batang:wght@400;700&amp;family=Nanum+Myeongjo:wght@400;700;800&amp;family=Noto+Sans+KR:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -766,7 +44,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* 개인정보 및 사진 보호: 본문 문자 선택·드래그·길게 눌러 복사/저장 원천 금지 */
     body {
       margin: 0;
       padding: 0;
@@ -782,7 +59,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       -webkit-touch-callout: none;
     }
 
-    /* 스튜디오 모달 내 입력 폼(input, textarea)만 정상 타이핑 및 선택 허용 */
     input, textarea {
       -webkit-user-select: text !important;
       -moz-user-select: text !important;
@@ -791,30 +67,17 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       -webkit-touch-callout: default !important;
     }
 
-    /* 이미지 드래그 및 모바일 롱탭 저장 방지 */
     img, svg {
       -webkit-user-drag: none;
       user-drag: none;
       -webkit-touch-callout: none;
     }
 
-    .font-serif-kr {
-      font-family: 'Gowun Batang', 'Nanum Myeongjo', serif;
-    }
+    .font-serif-kr { font-family: 'Gowun Batang', 'Nanum Myeongjo', serif; }
+    .font-myeongjo { font-family: 'Nanum Myeongjo', serif; }
+    .font-en { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .font-sans-kr { font-family: 'Noto Sans KR', sans-serif; }
 
-    .font-myeongjo {
-      font-family: 'Nanum Myeongjo', serif;
-    }
-
-    .font-en {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-    }
-
-    .font-sans-kr {
-      font-family: 'Noto Sans KR', sans-serif;
-    }
-
-    /* 중앙 모바일 청첩장 컨테이너 */
     #invitation-wrapper {
       max-width: 440px;
       margin: 0 auto;
@@ -826,7 +89,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       background: linear-gradient(180deg, #ffffff 0%, #fff8fa 35%, #fdf0f5 70%, #ffffff 100%);
     }
 
-    /* 스크롤連動 다이나믹 오로라 오브 (배경 그라데이션 광원 효과) */
     .ambient-orb {
       position: fixed;
       border-radius: 50%;
@@ -836,7 +98,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       transition: transform 0.3s ease-out, background-color 0.4s ease-out, opacity 0.4s ease-out;
     }
 
-    /* 섹션 등장 페이드업 애니메이션 */
     .reveal-section {
       opacity: 0;
       transform: translateY(28px);
@@ -848,7 +109,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       transform: translateY(0);
     }
 
-    /* 메인 웨딩 아치 프레임 */
     .arch-frame {
       border-radius: 200px 200px 24px 24px;
       box-shadow: 0 18px 40px -10px rgba(215, 140, 168, 0.28), 0 0 0 1px rgba(244, 194, 212, 0.6);
@@ -866,7 +126,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       pointer-events: none;
     }
 
-    /* 부드러운 유리 질감 카드 */
     .glass-card {
       background: rgba(255, 255, 255, 0.78);
       backdrop-filter: blur(12px);
@@ -875,7 +134,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       box-shadow: 0 8px 26px rgba(212, 145, 170, 0.08);
     }
 
-    /* 핑크빛 디바이더 */
     .floral-divider {
       display: flex;
       align-items: center;
@@ -892,7 +150,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       background: linear-gradient(90deg, transparent, #f0b8ce, transparent);
     }
 
-    /* 26일 하이라이트 펄스 효과 */
     @keyframes heartbeatPink {
       0%, 100% {
         transform: scale(1);
@@ -908,7 +165,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       animation: heartbeatPink 2.4s infinite ease-in-out;
     }
 
-    /* 아코디언 애니메이션 */
     .accordion-content {
       max-height: 0;
       overflow: hidden;
@@ -920,7 +176,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       opacity: 1;
     }
 
-    /* 벚꽃 캔버스 오버레이 */
     #petal-canvas {
       position: fixed;
       top: 0;
@@ -932,20 +187,8 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       pointer-events: none;
       z-index: 30;
     }
-
-    /* 커스텀 스크롤바 숨김 */
-    ::-webkit-scrollbar {
-      width: 5px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #fff8fa;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #f3c4d6;
-      border-radius: 9999px;
-    }
   </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.pointer-events-auto{pointer-events:auto}.visible{visibility:visible}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0px}.-left-16{left:-4rem}.-right-20{right:-5rem}.-top-10{top:-2.5rem}.bottom-10{bottom:2.5rem}.bottom-4{bottom:1rem}.bottom-6{bottom:1.5rem}.left-1\/2{left:50%}.left-3{left:0.75rem}.left-8{left:2rem}.right-3{right:0.75rem}.right-5{right:1.25rem}.top-0{top:0px}.top-1\/2{top:50%}.top-1\/3{top:33.333333%}.top-3{top:0.75rem}.top-5{top:1.25rem}.-z-10{z-index:-10}.z-10{z-index:10}.z-20{z-index:20}.z-40{z-index:40}.z-50{z-index:50}.mx-0\.5{margin-left:0.125rem;margin-right:0.125rem}.mx-auto{margin-left:auto;margin-right:auto}.my-2{margin-top:0.5rem;margin-bottom:0.5rem}.my-4{margin-top:1rem;margin-bottom:1rem}.my-auto{margin-top:auto;margin-bottom:auto}.mb-0\.5{margin-bottom:0.125rem}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.mb-7{margin-bottom:1.75rem}.mb-8{margin-bottom:2rem}.ml-1{margin-left:0.25rem}.mr-1{margin-right:0.25rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.mt-1\.5{margin-top:0.375rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.mb-1\.5{margin-bottom:0.375rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.aspect-\[3\/4\]{aspect-ratio:3/4}.h-1{height:0.25rem}.h-1\.5{height:0.375rem}.h-10{height:2.5rem}.h-48{height:12rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-64{height:16rem}.h-7{height:1.75rem}.h-72{height:18rem}.h-9{height:2.25rem}.h-\[1px\]{height:1px}.h-full{height:100%}.h-screen{height:100vh}.max-h-\[88vh\]{max-height:88vh}.w-0{width:0px}.w-1\.5{width:0.375rem}.w-10{width:2.5rem}.w-16{width:4rem}.w-48{width:12rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-64{width:16rem}.w-7{width:1.75rem}.w-72{width:18rem}.w-9{width:2.25rem}.w-full{width:100%}.max-w-\[280px\]{max-width:280px}.max-w-\[290px\]{max-width:290px}.max-w-\[330px\]{max-width:330px}.max-w-\[380px\]{max-width:380px}.max-w-\[420px\]{max-width:420px}.max-w-\[440px\]{max-width:440px}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-y-3{--tw-translate-y:0.75rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-y-0{--tw-translate-y:0px;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.list-inside{list-style-position:inside}.list-decimal{list-style-type:decimal}.list-disc{list-style-type:disc}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.grid-cols-7{grid-template-columns:repeat(7, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-y-2\.5{row-gap:0.625rem}.gap-y-3{row-gap:0.75rem}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-1\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.375rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.375rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem * var(--tw-space-y-reverse))}.divide-y > :not([hidden]) ~ :not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px * var(--tw-divide-y-reverse))}.divide-pink-100\/80 > :not([hidden]) ~ :not([hidden]){border-color:rgb(252 231 243 / 0.8)}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.whitespace-nowrap{white-space:nowrap}.whitespace-pre-line{white-space:pre-line}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-pink-100{--tw-border-opacity:1;border-color:rgb(252 231 243 / var(--tw-border-opacity, 1))}.border-pink-100\/70{border-color:rgb(252 231 243 / 0.7)}.border-pink-100\/80{border-color:rgb(252 231 243 / 0.8)}.border-pink-200{--tw-border-opacity:1;border-color:rgb(251 207 232 / var(--tw-border-opacity, 1))}.border-pink-200\/70{border-color:rgb(251 207 232 / 0.7)}.border-pink-200\/80{border-color:rgb(251 207 232 / 0.8)}.border-stone-100{--tw-border-opacity:1;border-color:rgb(245 245 244 / var(--tw-border-opacity, 1))}.border-stone-200{--tw-border-opacity:1;border-color:rgb(231 229 228 / var(--tw-border-opacity, 1))}.bg-\[\#00A84D\]\/10{background-color:rgb(0 168 77 / 0.1)}.bg-\[\#03C75A\]{--tw-bg-opacity:1;background-color:rgb(3 199 90 / var(--tw-bg-opacity, 1))}.bg-\[\#D4003B\]\/10{background-color:rgb(212 0 59 / 0.1)}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.bg-pink-100{--tw-bg-opacity:1;background-color:rgb(252 231 243 / var(--tw-bg-opacity, 1))}.bg-pink-100\/50{background-color:rgb(252 231 243 / 0.5)}.bg-pink-200{--tw-bg-opacity:1;background-color:rgb(251 207 232 / var(--tw-bg-opacity, 1))}.bg-pink-200\/40{background-color:rgb(251 207 232 / 0.4)}.bg-pink-400{--tw-bg-opacity:1;background-color:rgb(244 114 182 / var(--tw-bg-opacity, 1))}.bg-pink-50{--tw-bg-opacity:1;background-color:rgb(253 242 248 / var(--tw-bg-opacity, 1))}.bg-pink-50\/40{background-color:rgb(253 242 248 / 0.4)}.bg-pink-50\/70{background-color:rgb(253 242 248 / 0.7)}.bg-pink-50\/80{background-color:rgb(253 242 248 / 0.8)}.bg-pink-50\/90{background-color:rgb(253 242 248 / 0.9)}.bg-pink-500{--tw-bg-opacity:1;background-color:rgb(236 72 153 / var(--tw-bg-opacity, 1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.bg-rose-200\/35{background-color:rgb(254 205 211 / 0.35)}.bg-sky-100{--tw-bg-opacity:1;background-color:rgb(224 242 254 / var(--tw-bg-opacity, 1))}.bg-stone-100{--tw-bg-opacity:1;background-color:rgb(245 245 244 / var(--tw-bg-opacity, 1))}.bg-stone-50{--tw-bg-opacity:1;background-color:rgb(250 250 249 / var(--tw-bg-opacity, 1))}.bg-stone-50\/90{background-color:rgb(250 250 249 / 0.9)}.bg-stone-800\/90{background-color:rgb(41 37 36 / 0.9)}.bg-stone-900\/60{background-color:rgb(28 25 23 / 0.6)}.bg-stone-950\/85{background-color:rgb(12 10 9 / 0.85)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/15{background-color:rgb(255 255 255 / 0.15)}.bg-white\/20{background-color:rgb(255 255 255 / 0.2)}.bg-white\/50{background-color:rgb(255 255 255 / 0.5)}.bg-white\/60{background-color:rgb(255 255 255 / 0.6)}.bg-white\/70{background-color:rgb(255 255 255 / 0.7)}.bg-white\/85{background-color:rgb(255 255 255 / 0.85)}.bg-white\/90{background-color:rgb(255 255 255 / 0.9)}.bg-stone-900\/50{background-color:rgb(28 25 23 / 0.5)}.bg-white\/80{background-color:rgb(255 255 255 / 0.8)}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.bg-gradient-to-tr{background-image:linear-gradient(to top right, var(--tw-gradient-stops))}.from-pink-200{--tw-gradient-from:#fbcfe8 var(--tw-gradient-from-position);--tw-gradient-to:rgb(251 207 232 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-pink-50{--tw-gradient-from:#fdf2f8 var(--tw-gradient-from-position);--tw-gradient-to:rgb(253 242 248 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-pink-500{--tw-gradient-from:#ec4899 var(--tw-gradient-from-position);--tw-gradient-to:rgb(236 72 153 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-pink-400{--tw-gradient-to:rgb(244 114 182 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #f472b6 var(--tw-gradient-via-position), var(--tw-gradient-to)}.via-rose-50\/70{--tw-gradient-to:rgb(255 241 242 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), rgb(255 241 242 / 0.7) var(--tw-gradient-via-position), var(--tw-gradient-to)}.to-pink-50{--tw-gradient-to:#fdf2f8 var(--tw-gradient-to-position)}.to-rose-400{--tw-gradient-to:#fb7185 var(--tw-gradient-to-position)}.to-rose-500{--tw-gradient-to:#f43f5e var(--tw-gradient-to-position)}.object-cover{object-fit:cover}.p-1\.5{padding:0.375rem}.p-2\.5{padding:0.625rem}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-7{padding:1.75rem}.p-2{padding:0.5rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-12{padding-bottom:3rem}.pb-14{padding-bottom:3.5rem}.pb-24{padding-bottom:6rem}.pb-4{padding-bottom:1rem}.pt-1{padding-top:0.25rem}.pt-2{padding-top:0.5rem}.pt-3{padding-top:0.75rem}.pt-5{padding-top:1.25rem}.pt-6{padding-top:1.5rem}.pt-8{padding-top:2rem}.text-left{text-align:left}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[13px\]{font-size:13px}.text-\[15px\]{font-size:15px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-\[2\.1\]{line-height:2.1}.leading-relaxed{line-height:1.625}.tracking-\[0\.25em\]{letter-spacing:0.25em}.tracking-\[0\.28em\]{letter-spacing:0.28em}.tracking-\[0\.2em\]{letter-spacing:0.2em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-\[\#008A3E\]{--tw-text-opacity:1;color:rgb(0 138 62 / var(--tw-text-opacity, 1))}.text-\[\#03C75A\]{--tw-text-opacity:1;color:rgb(3 199 90 / var(--tw-text-opacity, 1))}.text-\[\#D4003B\]{--tw-text-opacity:1;color:rgb(212 0 59 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-indigo-700{--tw-text-opacity:1;color:rgb(67 56 202 / var(--tw-text-opacity, 1))}.text-pink-300{--tw-text-opacity:1;color:rgb(249 168 212 / var(--tw-text-opacity, 1))}.text-pink-300\/80{color:rgb(249 168 212 / 0.8)}.text-pink-400{--tw-text-opacity:1;color:rgb(244 114 182 / var(--tw-text-opacity, 1))}.text-pink-400\/90{color:rgb(244 114 182 / 0.9)}.text-pink-500{--tw-text-opacity:1;color:rgb(236 72 153 / var(--tw-text-opacity, 1))}.text-pink-600{--tw-text-opacity:1;color:rgb(219 39 119 / var(--tw-text-opacity, 1))}.text-pink-700{--tw-text-opacity:1;color:rgb(190 24 93 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-rose-400{--tw-text-opacity:1;color:rgb(251 113 133 / var(--tw-text-opacity, 1))}.text-sky-400{--tw-text-opacity:1;color:rgb(56 189 248 / var(--tw-text-opacity, 1))}.text-sky-600{--tw-text-opacity:1;color:rgb(2 132 199 / var(--tw-text-opacity, 1))}.text-stone-400{--tw-text-opacity:1;color:rgb(168 162 158 / var(--tw-text-opacity, 1))}.text-stone-500{--tw-text-opacity:1;color:rgb(120 113 108 / var(--tw-text-opacity, 1))}.text-stone-600{--tw-text-opacity:1;color:rgb(87 83 78 / var(--tw-text-opacity, 1))}.text-stone-700{--tw-text-opacity:1;color:rgb(68 64 60 / var(--tw-text-opacity, 1))}.text-stone-800{--tw-text-opacity:1;color:rgb(41 37 36 / var(--tw-text-opacity, 1))}.text-stone-900{--tw-text-opacity:1;color:rgb(28 25 23 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-white\/90{color:rgb(255 255 255 / 0.9)}.text-white\/95{color:rgb(255 255 255 / 0.95)}.underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}.decoration-pink-300{-webkit-text-decoration-color:#f9a8d4;text-decoration-color:#f9a8d4}.opacity-0{opacity:0}.opacity-100{opacity:1}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.drop-shadow-sm{--tw-drop-shadow:drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-\[2px\]{--tw-backdrop-blur:blur(2px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-150{transition-duration:150ms}.duration-300{transition-duration:300ms}.duration-700{transition-duration:700ms}.duration-500{transition-duration:500ms}.selection\:bg-pink-200 *::selection{--tw-bg-opacity:1;background-color:rgb(251 207 232 / var(--tw-bg-opacity, 1))}.selection\:text-pink-900 *::selection{--tw-text-opacity:1;color:rgb(131 24 67 / var(--tw-text-opacity, 1))}.selection\:bg-pink-200::selection{--tw-bg-opacity:1;background-color:rgb(251 207 232 / var(--tw-bg-opacity, 1))}.selection\:text-pink-900::selection{--tw-text-opacity:1;color:rgb(131 24 67 / var(--tw-text-opacity, 1))}.hover\:bg-\[\#02b351\]:hover{--tw-bg-opacity:1;background-color:rgb(2 179 81 / var(--tw-bg-opacity, 1))}.hover\:bg-pink-100:hover{--tw-bg-opacity:1;background-color:rgb(252 231 243 / var(--tw-bg-opacity, 1))}.hover\:bg-pink-100\/50:hover{background-color:rgb(252 231 243 / 0.5)}.hover\:bg-pink-50:hover{--tw-bg-opacity:1;background-color:rgb(253 242 248 / var(--tw-bg-opacity, 1))}.hover\:bg-pink-50\/60:hover{background-color:rgb(253 242 248 / 0.6)}.hover\:bg-white:hover{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.hover\:bg-white\/25:hover{background-color:rgb(255 255 255 / 0.25)}.hover\:bg-white\/30:hover{background-color:rgb(255 255 255 / 0.3)}.hover\:bg-stone-900\/60:hover{background-color:rgb(28 25 23 / 0.6)}.hover\:text-pink-600:hover{--tw-text-opacity:1;color:rgb(219 39 119 / var(--tw-text-opacity, 1))}.hover\:opacity-95:hover{opacity:0.95}.focus\:border-pink-400:focus{--tw-border-opacity:1;border-color:rgb(244 114 182 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.group:hover .group-hover\:scale-105{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}</style></head>
+</head>
 <body class="selection:bg-pink-200 selection:text-pink-900">
 
   <!-- 상단 스크롤 진행도 그라데이션 바 -->
@@ -961,20 +204,15 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
 
     <!-- 스크롤 반응형 핑크 그라데이션 배경 레이어 -->
     <div id="dynamic-bg-layer" class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[440px] h-screen -z-10 pointer-events-none transition-colors duration-300" style="background: linear-gradient(rgb(255, 255, 255) 0%, rgb(255, 247, 250) 55%, rgb(253, 236, 243) 100%);">
-      <!-- 스크롤에 따라 움직이는 파스텔 핑크 블러 오브 -->
       <div id="orb-1" class="ambient-orb w-64 h-64 bg-pink-200/40 -top-10 -left-16" style="transform: translate(0px, 0px);"></div>
       <div id="orb-2" class="ambient-orb w-72 h-72 bg-rose-200/35 top-1/3 -right-20" style="transform: translate(0px, 0px);"></div>
       <div id="orb-3" class="ambient-orb w-64 h-64 bg-pink-100/50 bottom-10 left-8" style="transform: translate(0px, 0px);"></div>
     </div>
 
-    <!-- 상단 우측 간편 컨트롤 배지 (꽃잎 효과 & 제작 도우미 열기) -->
-    
-
     <!-- ==========================================
          1. 메인 표지 섹션 (MAIN COVER)
     =========================================== -->
     <section class="px-6 pt-6 pb-14 text-center relative">
-      <!-- 상단 날짜 및 영문 레터링 -->
       <div class="mb-5">
         <p class="font-en tracking-[0.28em] text-xs uppercase text-pink-400 mb-1">Our Beginning, Spring Evening</p>
         <div class="inline-flex items-center gap-2.5 px-4 py-1 rounded-full bg-pink-50/90 border border-pink-200/70 shadow-inner">
@@ -986,61 +224,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
 
       <!-- 메인 아치형 웨딩 포토 프레임 -->
       <div class="relative mx-auto w-full max-w-[330px] aspect-[3/4] arch-frame group">
-        <!-- 사용자가 업로드한 커버 사진 (기본은 감성 일러스트+포토 프레임) -->
-        <img id="cover-photo-img" src="GH_02438-0.jpg" alt="웨딩 메인 사진" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                
-        <!-- 기본 제공 로맨틱 핑크 웨딩 아트워크 (사진 넣기 전 기본 표시) -->
-        <div id="cover-default-art" class="w-full h-full flex flex-col items-center justify-between p-7 relative overflow-hidden hidden" style="background: radial-gradient(circle at 50% 28%, #ffffff 0%, #fff0f5 48%, #f9d5e3 100%);">
-          <!-- 배경 장식 원형 및 꽃잎 일러스트 -->
-          <div class="w-full flex justify-between items-center text-pink-300/80 text-xs font-en tracking-widest z-10">
-            <span>SAINT MARYEL</span>
-            <span>PM 06:00</span>
-          </div>
-
-          <!-- 중앙 커플 실루엣 & 플로럴 아치 SVG -->
-          <div class="my-auto flex flex-col items-center z-10">
-            <svg class="w-48 h-48 drop-shadow-sm" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- 은은한 후광 -->
-              <circle cx="110" cy="110" r="78" fill="white" fill-opacity="0.7"></circle>
-              <circle cx="110" cy="110" r="68" stroke="#F3B8CE" stroke-width="1" stroke-dasharray="3 3"></circle>
-              <!-- 플로럴 리스 장식 -->
-              <path d="M55 150 C35 110, 55 55, 110 42 C165 55, 185 110, 165 150" stroke="#E899B7" stroke-width="1.5" fill="none"></path>
-              <!-- 핑크 꽃송이들 -->
-              <circle cx="110" cy="42" r="6" fill="#F4A7C1"></circle>
-              <circle cx="96" cy="45" r="4" fill="#FAD2E1"></circle>
-              <circle cx="124" cy="45" r="4" fill="#FAD2E1"></circle>
-              <circle cx="52" cy="95" r="5" fill="#F4A7C1"></circle>
-              <circle cx="168" cy="95" r="5" fill="#F4A7C1"></circle>
-              <!-- 신랑 & 신부 감성 라인 일러스트 -->
-              <!-- 신랑 -->
-              <circle cx="96" cy="98" r="11" fill="#5A4A4E"></circle>
-              <path d="M78 158 C78 128, 112 128, 112 158 Z" fill="#4A3E42"></path>
-              <path d="M93 128 L96 138 L99 128 Z" fill="#FFFFFF"></path>
-              <!-- 신부 -->
-              <circle cx="124" cy="103" r="10.5" fill="#6E585E"></circle>
-              <!-- 베일 -->
-              <path d="M124 93 C142 96, 154 125, 150 158 C138 158, 128 145, 124 125" fill="white" fill-opacity="0.85" stroke="#F4C2D4" stroke-width="1"></path>
-              <!-- 웨딩드레스 -->
-              <path d="M104 158 C108 130, 140 130, 146 158 Z" fill="#FFFFFF" stroke="#F3C1D3" stroke-width="1.2"></path>
-              <!-- 부케 -->
-              <circle cx="114" cy="138" r="8" fill="#F28DB2"></circle>
-              <circle cx="119" cy="141" r="6" fill="#F9C5D7"></circle>
-              <circle cx="110" cy="142" r="5.5" fill="#FFEef4"></circle>
-              <!-- 하트 -->
-              <path d="M110 74 C107 69, 100 70, 100 76 C100 81, 110 86, 110 89 C110 86, 120 81, 120 76 C120 70, 113 69, 110 74 Z" fill="#EA7B9F"></path>
-            </svg>
-            <p class="font-en italic text-base tracking-wider text-pink-500 mt-1">KIM YE KEUN &amp; SON HAEI</p>
-            <p class="text-[11px] font-sans-kr text-stone-400 mt-1">아래 버튼으로 실제 웨딩 사진을 넣어보세요</p>
-          </div>
-
-          <div class="z-10 text-center">
-            <span class="font-en text-xs tracking-[0.25em] text-pink-400/90 uppercase">Happy Wedding Day</span>
-          </div>
-        </div>
-
-        <!-- 커버 사진 즉시 변경 오버레이 버튼 -->
-        
-        <input id="cover-upload-input" type="file" accept="image/*" class="hidden" onchange="handleCoverPhotoUpload(event)">
+        <img id="cover-photo-img" src="GH_02438-0.jpg" alt="웨딩 메인 사진" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 cursor-pointer" onclick="openModal('GH_02438-0.jpg')">
       </div>
 
       <!-- 신랑 신부 이름 및 예식 일시/장소 요약 -->
@@ -1069,22 +253,23 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     =========================================== -->
     <section class="reveal-section px-6 py-12 text-center visible">
       <div class="glass-card rounded-3xl px-6 py-10 relative overflow-hidden">
-        <!-- 상단 꽃 아이콘 -->
         <div class="mx-auto w-10 h-10 rounded-full bg-pink-50 border border-pink-100 flex items-center justify-center mb-3 text-pink-400">
           <i class="fa-solid fa-seedling text-sm"></i>
         </div>
         <p class="font-en tracking-[0.25em] text-xs uppercase text-pink-400 mb-1">Invitation</p>
         <h2 id="greeting-title" class="text-lg font-myeongjo font-bold text-stone-800 mb-6">소중한 분들을 초대합니다</h2>
 
-        <!-- 초대 문구 본문 -->
-        <p id="greeting-body" class="text-[15px] leading-[2.1] text-stone-700 whitespace-pre-line mb-8">살랑이는 봄바람이 두 사람의 걸음을 맞추어 주는<br>3월의 어느 따스한 저녁,<br>서로의 가장 포근한 계절이 되어주기로 약속합니다.<br><br>가까이에서 아껴주신 소중한 분들을 모시고<br>사랑의 첫 페이지를 함께 열고자 하오니,<br>귀한 걸음 하시어 따뜻한 축복으로<br>저희의 시작을 빛내주시면 감사하겠습니다.</p>
+        <p id="greeting-body" class="text-[15px] leading-[2.1] text-stone-700 whitespace-pre-line mb-8">살랑이는 봄바람이 두 사람의 걸음을 맞추어 주는
+3월의 어느 따스한 저녁,
+서로의 가장 포근한 계절이 되어주기로 약속합니다.
 
-        <!-- 문구 감성 프리셋 즉시 전환 버튼 (편집 모드용) -->
-        
+가까이에서 아껴주신 소중한 분들을 모시고
+사랑의 첫 페이지를 함께 열고자 하오니,
+귀한 걸음 하시어 따뜻한 축복으로
+저희의 시작을 빛내주시면 감사하겠습니다.</p>
 
         <div class="w-16 h-[1px] bg-pink-200 mx-auto mb-7"></div>
 
-        <!-- 혼주 및 신랑·신부 소개 정렬 테이블 (장남 / 차녀 반영 및 런타임 복호화 연동) -->
         <div class="space-y-3 text-base text-stone-800 my-2">
           <div class="flex items-center justify-center gap-2">
             <span class="font-semibold tracking-wider"><span id="display-groom-father">김득승</span> · <span id="display-groom-mother">정미애</span></span>
@@ -1092,7 +277,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
             <span class="font-myeongjo font-bold text-lg text-stone-900 ml-1">김예근</span>
           </div>
           <div class="flex items-center justify-center gap-2">
-            <span class="font-semibold tracking-wider"><span id="display-bride-father">손승한</span> · <span id="display-bride-mother">이혜련</span></span>
+            <span class="font-semibold tracking-wider"><span id="display-bride-father">손승환</span> · <span id="display-bride-mother">이혜련</span></span>
             <span class="text-xs text-stone-500">의 차녀</span>
             <span class="font-myeongjo font-bold text-lg text-stone-900 ml-1">손해이</span>
           </div>
@@ -1109,13 +294,11 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       <p class="text-sm text-stone-500 mt-1 mb-6">토요일 오후 6시</p>
 
       <div class="glass-card rounded-3xl p-6">
-        <!-- 2027년 3월 달력 헤더 -->
         <div class="flex items-center justify-between border-b border-pink-100 pb-4 mb-4 px-2">
           <span class="font-en text-2xl font-semibold text-pink-500">March</span>
           <span class="font-en text-sm tracking-widest text-stone-400">2027</span>
         </div>
 
-        <!-- 요일 헤더 -->
         <div class="grid grid-cols-7 gap-y-3 text-xs font-sans-kr mb-2">
           <div class="text-rose-400 font-medium">일</div>
           <div class="text-stone-500">월</div>
@@ -1126,9 +309,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           <div class="text-sky-400 font-medium">토</div>
         </div>
 
-        <!-- 2027년 3월 날짜 그리드 (2027년 3월 1일은 월요일, 3월 26일은 금요일) -->
         <div class="grid grid-cols-7 gap-y-2.5 text-sm font-en items-center">
-          <!-- 1주차 -->
           <div></div>
           <div class="py-1.5 text-stone-700">1</div>
           <div class="py-1.5 text-stone-700">2</div>
@@ -1136,8 +317,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           <div class="py-1.5 text-stone-700">4</div>
           <div class="py-1.5 text-stone-700">5</div>
           <div class="py-1.5 text-sky-400">6</div>
-
-          <!-- 2주차 -->
           <div class="py-1.5 text-rose-400">7</div>
           <div class="py-1.5 text-stone-700">8</div>
           <div class="py-1.5 text-stone-700">9</div>
@@ -1145,8 +324,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           <div class="py-1.5 text-stone-700">11</div>
           <div class="py-1.5 text-stone-700">12</div>
           <div class="py-1.5 text-sky-400">13</div>
-
-          <!-- 3주차 -->
           <div class="py-1.5 text-rose-400">14</div>
           <div class="py-1.5 text-stone-700">15</div>
           <div class="py-1.5 text-stone-700">16</div>
@@ -1154,8 +331,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           <div class="py-1.5 text-stone-700">18</div>
           <div class="py-1.5 text-stone-700">19</div>
           <div class="py-1.5 text-sky-400">20</div>
-
-          <!-- 4주차 (27일 토요일 강조) -->
           <div class="py-1.5 text-rose-400">21</div>
           <div class="py-1.5 text-stone-700">22</div>
           <div class="py-1.5 text-stone-700">23</div>
@@ -1168,38 +343,34 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
             </div>
             <span class="text-[9px] font-sans-kr text-pink-600 font-semibold mt-0.5 whitespace-nowrap">오후 6시</span>
           </div>
-
-          <!-- 5주차 -->
           <div class="py-1.5 text-rose-400">28</div>
           <div class="py-1.5 text-stone-700">29</div>
           <div class="py-1.5 text-stone-700">30</div>
           <div class="py-1.5 text-stone-700">31</div>
-          <div></div>
-          <div></div>
-          <div></div>
+          <div></div><div></div><div></div>
         </div>
 
         <!-- 실시간 카운트다운 박스 -->
         <div class="mt-6 pt-5 border-t border-pink-100">
           <div class="grid grid-cols-4 gap-2 max-w-[290px] mx-auto mb-4">
             <div class="bg-pink-50/90 border border-pink-100 rounded-2xl py-2.5 px-1">
-              <div id="dday-days" class="font-en text-2xl font-bold text-pink-600">138</div>
+              <div id="dday-days" class="font-en text-2xl font-bold text-pink-600">0</div>
               <div class="text-[10px] font-en uppercase tracking-widest text-stone-400">Days</div>
             </div>
             <div class="bg-pink-50/90 border border-pink-100 rounded-2xl py-2.5 px-1">
-              <div id="dday-hours" class="font-en text-2xl font-bold text-pink-600">22</div>
+              <div id="dday-hours" class="font-en text-2xl font-bold text-pink-600">00</div>
               <div class="text-[10px] font-en uppercase tracking-widest text-stone-400">Hours</div>
             </div>
             <div class="bg-pink-50/90 border border-pink-100 rounded-2xl py-2.5 px-1">
-              <div id="dday-mins" class="font-en text-2xl font-bold text-pink-600">17</div>
+              <div id="dday-mins" class="font-en text-2xl font-bold text-pink-600">00</div>
               <div class="text-[10px] font-en uppercase tracking-widest text-stone-400">Mins</div>
             </div>
             <div class="bg-pink-50/90 border border-pink-100 rounded-2xl py-2.5 px-1">
-              <div id="dday-secs" class="font-en text-2xl font-bold text-pink-600">37</div>
+              <div id="dday-secs" class="font-en text-2xl font-bold text-pink-600">00</div>
               <div class="text-[10px] font-en uppercase tracking-widest text-stone-400">Secs</div>
             </div>
           </div>
-          <p id="dday-message" class="text-sm text-stone-700">예근 <i class="fa-solid fa-heart text-pink-400 text-xs mx-0.5"></i> 해이의 결혼식이 <span class="text-pink-600 font-bold">138일</span> 남았습니다.</p>
+          <p id="dday-message" class="text-sm text-stone-700"></p>
         </div>
       </div>
     </section>
@@ -1212,26 +383,17 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       <h2 class="text-lg font-myeongjo font-bold text-stone-800 mb-2">우리의 설레는 순간</h2>
       <p class="text-xs font-sans-kr text-stone-400 mb-5">사진을 터치하면 크게 보실 수 있습니다</p>
 
-      <!-- 갤러리 사진 일괄 업로드 테스트 버튼 -->
-      
-<!-- 10칸 감성 그리드 갤러리 (3열) -->
+      <!-- 10칸 감성 그리드 갤러리 (3열) -->
       <div id="gallery-grid" class="grid grid-cols-3 gap-2">
-        <!-- 1~5번째 사진 (클릭 시 확대 모달) -->
+        <!-- 1~5번째 사진 -->
         <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_00204-0.jpg')"><img src="GH_00204-0.jpg" class="w-full h-full object-cover"></div>
         <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_00334-0.jpg')"><img src="GH_00334-0.jpg" class="w-full h-full object-cover"></div>
         <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_01138-0.jpg')"><img src="GH_01138-0.jpg" class="w-full h-full object-cover"></div>
         <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_01222-1.jpg')"><img src="GH_01222-1.jpg" class="w-full h-full object-cover"></div>
         <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_01288-1.jpg')"><img src="GH_01288-1.jpg" class="w-full h-full object-cover"></div>
 
-        <!-- 6번째 사진 (+5 오버레이 클릭 시 즉시 7~10번 펼치고 모달로 전환) -->
-        <div id="gallery-more-box" class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative bg-white" onclick="
-          const ov = this.querySelector('#more-dimmed-layer');
-          if(ov) {
-            ov.remove();
-            document.querySelectorAll('.extra-photo').forEach(el => el.style.display = 'block');
-            this.onclick = function() { openModal('GH_01627-0.jpg'); };
-          }
-        ">
+        <!-- 6번째 사진 (+5 더보기 레이어) -->
+        <div id="gallery-more-box" class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative bg-white" onclick="showAllPhotos()">
           <img src="GH_01627-0.jpg" class="w-full h-full object-cover">
           <div id="more-dimmed-layer" class="absolute inset-0 bg-stone-900/60 backdrop-blur-[2px] flex flex-col items-center justify-center text-white pointer-events-none">
             <span class="text-2xl font-light leading-none mb-1">+</span>
@@ -1239,13 +401,15 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           </div>
         </div>
 
-        <!-- 7~10번째 사진 (초기에는 display:none으로 숨김) -->
-        <div class="extra-photo cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" style="display:none;" onclick="openModal('GH_02213-0.jpg')"><img src="GH_02213-0.jpg" class="w-full h-full object-cover"></div>
-        <div class="extra-photo cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" style="display:none;" onclick="openModal('GH_02374-1.jpg')"><img src="GH_02374-1.jpg" class="w-full h-full object-cover"></div>
-        <div class="extra-photo cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" style="display:none;" onclick="openModal('GH_02438-0.jpg')"><img src="GH_02438-0.jpg" class="w-full h-full object-cover"></div>
-        <div class="extra-photo cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" style="display:none;" onclick="openModal('GH_02584-1.jpg')"><img src="GH_02584-1.jpg" class="w-full h-full
+        <!-- 7~10번째 사진 (초기 숨김: hidden 클래스 적용) -->
+        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02213-0.jpg')"><img src="GH_02213-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02374-1.jpg')"><img src="GH_02374-1.jpg" class="w-full h-full object-cover"></div>
+        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02438-0.jpg')"><img src="GH_02438-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02584-1.jpg')"><img src="GH_02584-1.jpg" class="w-full h-full object-cover"></div>
+      </div>
+    </section>
 
-<!-- ==========================================
+    <!-- ==========================================
          5. 오시는 길 (LOCATION - 세인트메리엘 강남)
     =========================================== -->
     <section class="reveal-section px-6 py-10 visible">
@@ -1255,7 +419,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       </div>
 
       <div class="glass-card rounded-3xl overflow-hidden">
-        <!-- 웨딩홀 명칭, 주소, 전화번호 및 원클릭 복사 헤더 -->
         <div class="p-6 text-center bg-white/60 border-b border-pink-100">
           <h3 id="display-venue-name" class="text-xl font-myeongjo font-bold text-stone-800">세인트메리엘 강남</h3>
           <p id="display-venue-hall" class="text-sm text-pink-600 font-medium mt-1">세인트메리엘 (세인트홀, 2층)</p>
@@ -1271,7 +434,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
 
         <!-- 네이버 지도 뷰어 및 길찾기 영역 -->
         <div class="border-b border-pink-100 bg-white">
-          <!-- 상단 네이버 지도 타이틀 헤더 -->
           <div class="bg-[#03C75A] px-4 py-2 flex items-center justify-between text-white">
             <span class="text-xs font-bold tracking-wider flex items-center gap-1.5">
               <span class="bg-white text-[#03C75A] font-black rounded px-1 text-[10px]">N</span> NAVER 지도
@@ -1279,52 +441,40 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
             <span class="text-[11px] opacity-90 font-medium">세인트메리엘 강남</span>
           </div>
 
-          <!-- 실제 지도 그래픽 뷰어 (강남역 1·4번 출구 및 세인트메리엘 핀 표시) -->
+          <!-- 실제 지도 그래픽 뷰어 -->
           <div class="relative w-full aspect-[16/11] bg-[#f4f3ef] overflow-hidden">
             <svg class="w-full h-full" viewBox="0 0 400 270" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- 배경 지도 블록 -->
               <rect width="400" height="270" fill="#F4F3F0"/>
-              <!-- 테헤란로 및 주요 간선도로 -->
               <rect x="0" y="30" width="400" height="28" fill="#FFFFFF" stroke="#E5E3DC" stroke-width="1.5"/>
               <text x="180" y="48" font-family="'Pretendard', sans-serif" font-size="11" fill="#999388" font-weight="bold">테헤란로</text>
-              <!-- 강남대로 (세로 도로) -->
               <rect x="50" y="0" width="30" height="270" fill="#FFFFFF" stroke="#E5E3DC" stroke-width="1.5"/>
               <text x="65" y="160" font-family="'Pretendard', sans-serif" font-size="10" fill="#999388" font-weight="bold" transform="rotate(90 65 160)">강남대로</text>
-              <!-- 논현로 및 이면도로 골목길 망 -->
               <rect x="235" y="58" width="18" height="212" fill="#FFFFFF" stroke="#EAE8E1" stroke-width="1.2"/>
               <rect x="50" y="115" width="350" height="18" fill="#FFFFFF" stroke="#EAE8E1" stroke-width="1.2"/>
               <rect x="50" y="180" width="350" height="20" fill="#FFFFFF" stroke="#EAE8E1" stroke-width="1.2"/>
               <text x="145" y="194" font-family="'Pretendard', sans-serif" font-size="9" fill="#B0AAA0">논현로 79길</text>
-              <!-- 2호선 / 신분당선 강남역 지하철 노선 바 -->
               <rect x="0" y="24" width="85" height="10" rx="3" fill="#00A84D"/>
               <text x="8" y="32" font-family="'Pretendard', sans-serif" font-size="8" fill="#FFFFFF" font-weight="bold">② 강남역</text>
               <rect x="50" y="34" width="10" height="85" rx="3" fill="#D4003B"/>
-              <!-- 강남역 1번 출구 셔틀버스 승차장 핀 -->
               <circle cx="88" cy="44" r="9" fill="#00A84D"/>
               <text x="88" y="48" font-family="'Pretendard', sans-serif" font-size="10" fill="#FFFFFF" font-weight="bold" text-anchor="middle">1</text>
               <rect x="100" y="37" width="55" height="16" rx="4" fill="#00A84D"/>
               <text x="127" y="48" font-family="'Pretendard', sans-serif" font-size="8" fill="#FFFFFF" font-weight="bold" text-anchor="middle">셔틀 탑승</text>
-              <!-- 강남역 4번 출구 배지 -->
               <circle cx="55" cy="124" r="8" fill="#D4003B"/>
               <text x="55" y="127.5" font-family="'Pretendard', sans-serif" font-size="9" fill="#FFFFFF" font-weight="bold" text-anchor="middle">4</text>
-              <!-- 도보 경로 안내 점선 (우리은행 우회전 루트) -->
               <path d="M90 44 L244 44 L244 190 L300 190" stroke="#03C75A" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
-              <!-- 주요 랜드마크 포인트 -->
               <circle cx="244" cy="44" r="3" fill="#03C75A"/>
               <text x="252" y="47" font-family="'Pretendard', sans-serif" font-size="9" fill="#666157" font-weight="bold">우리은행</text>
               <text x="75" y="127" font-family="'Pretendard', sans-serif" font-size="9" fill="#666157">358타워</text>
               <text x="260" y="145" font-family="'Pretendard', sans-serif" font-size="8" fill="#999388">역삼1동 주민센터</text>
-              <!-- 세인트메리엘 웨딩홀 위치 마커 (네이버 초록색 핀 & 그림자) -->
               <ellipse cx="308" cy="192" rx="14" ry="4" fill="#000000" fill-opacity="0.18"/>
-              <path d="M308 152 C296 152 287 161 287 172 C287 186 308 202 308 202 C308 202 329 186 329 172 C329 161 320 152 308 152 Z" fill="#03C75A" filter="drop-shadow(0px 3px 5px rgba(3,199,90,0.35))"/>
+              <path d="M308 152 C296 152 287 161 287 172 C287 186 308 202 308 202 C308 202 329 186 329 172 C329 161 320 152 308 152 Z" fill="#03C75A"/>
               <circle cx="308" cy="171" r="7" fill="#FFFFFF"/>
-              <!-- 네이버 지도 스타일 세인트메리엘 말풍선 라벨 -->
-              <rect x="252" y="120" width="112" height="28" rx="6" fill="#1EC800" filter="drop-shadow(0px 4px 8px rgba(0,0,0,0.18))"/>
+              <rect x="252" y="120" width="112" height="28" rx="6" fill="#1EC800"/>
               <polygon points="308,150 302,148 314,148" fill="#1EC800"/>
               <text x="308" y="138" font-family="'Pretendard', sans-serif" font-size="11" fill="#FFFFFF" font-weight="bold" text-anchor="middle">세인트메리엘</text>
             </svg>
 
-            <!-- 네이버 지도 앱 길찾기 바로가기 오버레이 버튼 -->
             <div class="absolute bottom-3 right-3">
               <a href="https://map.naver.com/p/search/%EC%84%B8%EC%9D%B8%ED%8A%B8%EB%A9%94%EB%A6%AC%EC%97%98%20%EA%B0%95%EB%82%A8" 
                  target="_blank" 
@@ -1336,7 +486,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
             </div>
           </div>
 
-          <!-- 하단 지도 앱 3사 원클릭 길찾기 바 -->
           <div class="grid grid-cols-3 divide-x divide-stone-200 border-t border-stone-100 bg-stone-50 text-xs py-3 text-center font-semibold">
             <a href="https://map.naver.com/p/search/%EC%84%B8%EC%9D%B8%ED%8A%B8%EB%A9%94%EB%A6%AC%EC%97%98%20%EA%B0%95%EB%82%A8" target="_blank" rel="noopener noreferrer" class="text-[#03C75A] hover:opacity-80 py-0.5 flex items-center justify-center gap-1">
               <span class="w-4 h-4 rounded bg-[#03C75A] text-white text-[9px] font-black flex items-center justify-center">N</span> 네이버 지도
@@ -1350,9 +499,8 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           </div>
         </div>
 
-        <!-- 대중교통, 셔틀버스, 버스 및 자가용 정중 안내 -->
+        <!-- 교통편 안내 -->
         <div class="p-6 space-y-5 text-left font-sans-kr text-xs leading-relaxed text-stone-600">
-          <!-- 지하철 안내 -->
           <div class="flex items-start gap-3">
             <div class="w-7 h-7 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center shrink-0 mt-0.5">
               <i class="fa-solid fa-train-subway"></i>
@@ -1364,7 +512,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
             </div>
           </div>
 
-          <!-- 셔틀버스 강조 배지 카드 -->
           <div class="p-3.5 rounded-2xl bg-gradient-to-r from-pink-50 via-rose-50/70 to-pink-50 border border-pink-200/80 flex items-start gap-3 shadow-2xs">
             <div class="w-7 h-7 rounded-full bg-pink-500 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               <i class="fa-solid fa-van-shuttle text-[11px]"></i>
@@ -1379,7 +526,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
             </div>
           </div>
 
-          <!-- 버스 안내 -->
           <div class="flex items-start gap-3">
             <div class="w-7 h-7 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center shrink-0 mt-0.5">
               <i class="fa-solid fa-bus"></i>
@@ -1397,7 +543,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
             </div>
           </div>
 
-          <!-- 자가용 및 대중교통 권유 정중 안내 문구 -->
           <div class="flex items-start gap-3 pt-1 border-t border-pink-100/80">
             <div class="w-7 h-7 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center shrink-0 mt-1">
               <i class="fa-solid fa-circle-info"></i>
@@ -1412,7 +557,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     </section>
 
     <!-- ==========================================
-         6. 마음 전하실 곳 (신랑·신부측 계좌번호 - 전용 복사버튼 및 보안 적용)
+         6. 마음 전하실 곳 (신랑·신부측 계좌번호)
     =========================================== -->
     <section class="reveal-section px-6 py-10 text-center visible">
       <p class="font-en tracking-[0.25em] text-xs uppercase text-pink-400 mb-1">Account</p>
@@ -1423,7 +568,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       </p>
 
       <div class="space-y-3 text-left font-sans-kr">
-        <!-- 신랑측 계좌번호 아코디언 -->
+        <!-- 신랑측 계좌번호 -->
         <div class="glass-card rounded-2xl overflow-hidden">
           <button onclick="toggleAccordion('groom-acc')" class="w-full px-5 py-4 flex items-center justify-between bg-white/70 hover:bg-pink-50/60 transition">
             <div class="flex items-center gap-2.5">
@@ -1434,7 +579,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           </button>
 
           <div id="groom-acc" class="accordion-content divide-y divide-pink-100/80 bg-white/50">
-            <!-- 신랑 김예근 -->
             <div class="p-4 flex items-center justify-between gap-2">
               <div>
                 <div class="text-xs text-stone-500 mb-0.5">신랑 <strong class="text-stone-800">김예근</strong></div>
@@ -1444,7 +588,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
                 <i class="fa-regular fa-copy"></i><span>계좌번호 복사</span>
               </button>
             </div>
-            <!-- 신랑 아버지 김득승 -->
             <div class="p-4 flex items-center justify-between gap-2">
               <div>
                 <div class="text-xs text-stone-500 mb-0.5">신랑 아버지 <strong class="text-stone-800">김득승</strong></div>
@@ -1454,7 +597,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
                 <i class="fa-regular fa-copy"></i><span>계좌번호 복사</span>
               </button>
             </div>
-            <!-- 신랑 어머니 정미애 -->
             <div class="p-4 flex items-center justify-between gap-2">
               <div>
                 <div class="text-xs text-stone-500 mb-0.5">신랑 어머니 <strong class="text-stone-800">정미애</strong></div>
@@ -1467,7 +609,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           </div>
         </div>
 
-        <!-- 신부측 계좌번호 아코디언 -->
+        <!-- 신부측 계좌번호 -->
         <div class="glass-card rounded-2xl overflow-hidden">
           <button onclick="toggleAccordion('bride-acc')" class="w-full px-5 py-4 flex items-center justify-between bg-white/70 hover:bg-pink-50/60 transition">
             <div class="flex items-center gap-2.5">
@@ -1478,7 +620,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           </button>
 
           <div id="bride-acc" class="accordion-content divide-y divide-pink-100/80 bg-white/50">
-            <!-- 신부 손해이 -->
             <div class="p-4 flex items-center justify-between gap-2">
               <div>
                 <div class="text-xs text-stone-500 mb-0.5">신부 <strong class="text-stone-800">손해이</strong></div>
@@ -1488,17 +629,15 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
                 <i class="fa-regular fa-copy"></i><span>계좌번호 복사</span>
               </button>
             </div>
-            <!-- 신부 아버지 손승한 -->
             <div class="p-4 flex items-center justify-between gap-2">
               <div>
-                <div class="text-xs text-stone-500 mb-0.5">신부 아버지 <strong class="text-stone-800">손승한</strong></div>
+                <div class="text-xs text-stone-500 mb-0.5">신부 아버지 <strong class="text-stone-800">손승환</strong></div>
                 <div id="acc-bride-father" class="text-xs text-stone-600 font-medium">보안 계좌 정보 불러오는 중...</div>
               </div>
-              <button onclick="copyAccount('acc-bride-father', '신부 아버지 손승한', this)" class="shrink-0 px-3.5 py-2 rounded-xl bg-pink-50 hover:bg-pink-100 border border-pink-200 text-pink-600 text-xs font-semibold transition flex items-center gap-1.5 shadow-2xs">
+              <button onclick="copyAccount('acc-bride-father', '신부 아버지 손승환', this)" class="shrink-0 px-3.5 py-2 rounded-xl bg-pink-50 hover:bg-pink-100 border border-pink-200 text-pink-600 text-xs font-semibold transition flex items-center gap-1.5 shadow-2xs">
                 <i class="fa-regular fa-copy"></i><span>계좌번호 복사</span>
               </button>
             </div>
-            <!-- 신부 어머니 이혜련 -->
             <div class="p-4 flex items-center justify-between gap-2">
               <div>
                 <div class="text-xs text-stone-500 mb-0.5">신부 어머니 <strong class="text-stone-800">이혜련</strong></div>
@@ -1539,50 +678,24 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     </footer>
   </main>
 
-  <!-- =====================================================
-       모달 2: 갤러리 라이트박스 (확대 보기)
-  ====================================================== -->
-  <div id="lightbox-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-950/85 backdrop-blur-sm p-4">
-    <button onclick="closeModal('lightbox-modal')" class="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/15 text-white flex items-center justify-center text-lg hover:bg-white/25">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-
-    <button onclick="changeLightboxSlide(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/15 text-white flex items-center justify-center hover:bg-white/25">
-      <i class="fa-solid fa-chevron-left"></i>
-    </button>
-
-    <div id="lightbox-content" class="w-full max-w-[380px] aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl bg-pink-50 flex items-center justify-center">
-      <!-- 선택된 이미지 또는 일러스트 렌더링 -->
-    </div>
-
-    <button onclick="changeLightboxSlide(1)" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/15 text-white flex items-center justify-center hover:bg-white/25">
-      <i class="fa-solid fa-chevron-right"></i>
-    </button>
-  </div>
-
-  <!-- =====================================================
-       모달 3: 커스텀 제작 스튜디오 & 무료 사이트 배포 가이드
-  ====================================================== -->
-  
-
-  <!-- 하단 복사/알림 토스트 메시지 -->
+  <!-- 하단 알림 토스트 메시지 -->
   <div id="toast-box" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 px-5 py-2.5 rounded-full bg-stone-800/90 text-white text-xs font-sans-kr shadow-lg flex items-center gap-2 opacity-0 translate-y-3">
     <i class="fa-solid fa-circle-check text-pink-400"></i>
-    <span id="toast-text">10장의 갤러리 사진이 최적화되어 적용되었습니다!</span>
+    <span id="toast-text">복사되었습니다 💗</span>
   </div>
 
-  <!-- =====================================================
-       자바스크립트 로직 (스크롤 그라데이션, 벚꽃 캔버스, 디데이, 갤러리 등)
-  ====================================================== -->
-  <script>
-    /* -----------------------------------------------------------
-       0. GitHub Public 배포 대비 Base64 난독화 보안 스토어
-          (HTML 소스코드에 계좌번호 평문이 노출되지 않도록 런타임 복호화)
-    ----------------------------------------------------------- */
-    function encodeUTF8ToBase64(str) {
-      return window.btoa(unescape(encodeURIComponent(str || '')));
-    }
+  <!-- 웨딩 사진 원본 확대 모달 레이어 -->
+  <div id="photo-modal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 opacity-0" onclick="closeModal()">
+    <button class="absolute top-5 right-5 text-white/90 hover:text-white text-3xl font-light p-2 z-10 focus:outline-none" onclick="closeModal()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="relative max-w-full max-h-[88vh] flex items-center justify-center" onclick="event.stopPropagation()">
+      <img id="modal-image-target" src="" alt="확대 웨딩 사진" class="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl transition-transform duration-300">
+    </div>
+  </div>
 
+  <!-- 자바스크립트 로직 -->
+  <script>
     function decodeBase64ToUTF8(b64) {
       try {
         return decodeURIComponent(escape(window.atob(b64 || '')));
@@ -1591,15 +704,14 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       }
     }
 
-    // 배포용 HTML 다운로드 시 이 객체 내부에 Base64로 인코딩된 계좌번호가 주입됩니다.
     window.__SECURE_ACCOUNT_STORE__ = {
-  "acc-groom-self": "7ZWY64KY7J2A7ZaJIDM4Ni05MTA0MDQtMTExMDc=",
-  "acc-groom-father": "W+ydgO2WieuqhV0g6rOE7KKM67KI7Zi4IOy2lO2bhCDsnoXroKUgKOqzteuegCk=",
-  "acc-groom-mother": "W+ydgO2WieuqhV0g6rOE7KKM67KI7Zi4IOy2lO2bhCDsnoXroKUgKOqzteuegCk=",
-  "acc-bride-self": "W+ydgO2WieuqhV0g6rOE7KKM67KI7Zi4IOy2lO2bhCDsnoXroKUgKOqzteuegCk=",
-  "acc-bride-father": "W+ydgO2WieuqhV0g6rOE7KKM67KI7Zi4IOy2lO2bhCDsnoXroKUgKOqzteuegCk=",
-  "acc-bride-mother": "W+ydgO2WieuqhV0g6rOE7KKM67KI7Zi4IOy2lO2bhCDsnoXroKUgKOqzteuegCk="
-};
+      "acc-groom-self": "7ZWY64KY7J2A7ZaJIDM4Ni05MTA0MDQtMTExMDc=",
+      "acc-groom-father": "W+ydgO2WieuqhV0g6rOE7KKM67KI7Zi4IOy2lO2bhCDsnoXroKUgKOqzteuegCk=",
+      "acc-groom-mother": "W+ydgO2WieuqhV0g6rOE7KKM67KI7Zi4IOy2lO2bhCDsnoXroKUgKOqzteuegCk=",
+      "acc-bride-self": "W+ydgO2WieuqhV0g6rOE7KKM67KI7Zi4IOy2lO2bhCDsnoXroKUgKOqzteuegCk=",
+      "acc-bride-father": "W+ydgO2WieuqhV0g6rOE7KKM67KI7Zi4IOy2lO2bhCDsnoXroKUgKOqzteuegCk=",
+      "acc-bride-mother": "W+ydgO2WieuqhV0g6rOE7KKM67KI7Zi4IOy2lO2bhCDsnoXroKUgKOqzteuegCk="
+    };
 
     function hydrateSecureAccounts() {
       if (!window.__SECURE_ACCOUNT_STORE__) return;
@@ -1612,22 +724,12 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       });
     }
 
-    /* -----------------------------------------------------------
-       0-1. 우클릭 방지, 드래그·복사 차단, 개발자도구 단축키 방지 보안 모듈
-    ----------------------------------------------------------- */
     function initSecurityGuards() {
-      // 1) 우클릭(Context Menu) 원천 차단
       document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
         showToast('소중한 개인정보와 사진 보호를 위해 우클릭이 제한되어 있습니다.');
       });
-
-      // 2) 이미지 및 요소 드래그 시작 차단
-      document.addEventListener('dragstart', function(e) {
-        e.preventDefault();
-      });
-
-      // 3) 일반 영역 텍스트 무단 선택 및 Ctrl+C / 잘라내기 차단 (스튜디오 입력창 제외)
+      document.addEventListener('dragstart', function(e) { e.preventDefault(); });
       ['copy', 'cut', 'selectstart'].forEach(evtName => {
         document.addEventListener(evtName, function(e) {
           const tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
@@ -1635,12 +737,9 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           e.preventDefault();
         });
       });
-
-      // 4) 소스보기(Ctrl+U), 저장(Ctrl+S), 개발자도구(F12, Ctrl+Shift+I/J/C) 단축키 차단
       document.addEventListener('keydown', function(e) {
         const key = e.key ? e.key.toLowerCase() : '';
         const isCtrlOrCmd = e.ctrlKey || e.metaKey;
-
         if (
           e.key === 'F12' ||
           (isCtrlOrCmd && e.shiftKey && ['i', 'j', 'c'].includes(key)) ||
@@ -1653,70 +752,14 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       });
     }
 
-    /* -----------------------------------------------------------
-       1. 초대 문구 3가지 감성 프리셋 & 자가용 정중 안내 프리셋
-    ----------------------------------------------------------- */
-    const greetingPresets = [
-      {
-        title: "소중한 분들을 초대합니다",
-        body: `살랑이는 봄바람이 두 사람의 걸음을 맞추어 주는\n3월의 어느 따스한 저녁,\n서로의 가장 포근한 계절이 되어주기로 약속합니다.\n\n가까이에서 아껴주신 소중한 분들을 모시고\n사랑의 첫 페이지를 함께 열고자 하오니,\n귀한 걸음 하시어 따뜻한 축복으로\n저희의 시작을 빛내주시면 감사하겠습니다.`
-      },
-      {
-        title: "저희 두 사람, 결혼합니다",
-        body: `서로가 마주보며 다져온 사랑을\n이제 함께 한곳을 바라보며 걸어갈 수 있는\n큰 사랑으로 키우고자 합니다.\n\n저희 두 사람이 사랑의 이름으로 지켜나갈 수 있도록\n앞날을 축복해 주시면 더없는 기쁨으로\n마음 깊이 간직하겠습니다.`
-      },
-      {
-        title: "설레는 봄날 저녁의 초대",
-        body: `꽃잎이 피어나는 삼월의 봄밤 아래,\n예근과 해이가 부부라는 이름으로\n새로운 산책을 시작합니다.\n\n가장 빛나는 순간에 소중한 분들과\n기쁨을 나누고 싶습니다.\n부디 참석하시어 자리를 빛내주시기 바랍니다.`
-      }
-    ];
-
-    const parkingPresets = [
-      "주말 오후 강남역 일대의 교통 및 주차 혼잡이 예상되어 주차에 다소 불편함이 있으실 수 있습니다. 귀한 걸음 해주시는 하객 여러분의 편안한 이동을 위해 가급적 대중교통이나 강남역 1번 출구 셔틀버스 이용을 정중히 권해드립니다.",
-      "예식이 진행되는 토요일 저녁 시간대에는 강남역 인근 도로와 주차장이 매우 혼잡할 것으로 예상됩니다. 참석해 주시는 분들의 여유롭고 편안한 걸음을 위해 대중교통 및 강남역 1번 출구 셔틀버스(예식 1시간 전부터 운행) 이용을 부탁드립니다."
-    ];
-
-    function setParkingPreset(idx) {
-      const text = parkingPresets[idx] || parkingPresets[0];
-      const inputEl = document.getElementById('input-parking-notice');
-      const displayEl = document.getElementById('display-parking-notice');
-      if (inputEl) inputEl.value = text;
-      if (displayEl) displayEl.innerText = text;
-      showToast('자가용 안내 문구가 변경되었습니다.');
-    }
-
-    function setGreetingPreset(index) {
-      const preset = greetingPresets[index];
-      document.getElementById('greeting-title').innerText = preset.title;
-      document.getElementById('greeting-body').innerText = preset.body;
-      document.getElementById('input-greeting-body').value = preset.body;
-
-      for (let i = 0; i < 3; i++) {
-        const btn = document.getElementById(`preset-btn-${i}`);
-        if (i === index) {
-          btn.className = "py-1.5 px-2 rounded-xl bg-pink-500 text-white font-medium transition";
-        } else {
-          btn.className = "py-1.5 px-2 rounded-xl bg-white text-stone-600 border border-pink-100 hover:bg-pink-100/50 transition";
-        }
-      }
-      showToast('초대 문구 분위기가 변경되었습니다.');
-    }
-
-    /* -----------------------------------------------------------
-       2. 스크롤 위치 기반 화이트 ↔ 핑크 그라데이션 & 오브 인터랙션
-    ----------------------------------------------------------- */
     function handleScrollGradient() {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const docHeight = Math.max(document.body.scrollHeight - window.innerHeight, 1);
       const progress = Math.min(Math.max(scrollTop / docHeight, 0), 1);
 
-      // 상단 프로그레스 바 업데이트
       const progressBar = document.getElementById('scroll-progress-bar');
-      if (progressBar) {
-        progressBar.style.width = `${progress * 100}%`;
-      }
+      if (progressBar) progressBar.style.width = `${progress * 100}%`;
 
-      // 스크롤 비율에 따라 배경 그라데이션 색상 보간 (화이트 -> 소프트 핑크 -> 로즈 블러쉬 -> 화이트 핑크)
       const bgLayer = document.getElementById('dynamic-bg-layer');
       if (bgLayer) {
         if (progress < 0.25) {
@@ -1730,7 +773,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         }
       }
 
-      // 배경 블러 오브 부드러운 패럴랙스 이동
       const orb1 = document.getElementById('orb-1');
       const orb2 = document.getElementById('orb-2');
       const orb3 = document.getElementById('orb-3');
@@ -1743,9 +785,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
 
     window.addEventListener('scroll', handleScrollGradient, { passive: true });
 
-    /* -----------------------------------------------------------
-       3. 섹션 스크롤 등장 애니메이션 (IntersectionObserver)
-    ----------------------------------------------------------- */
     function initRevealObserver() {
       const sections = document.querySelectorAll('.reveal-section');
       const observer = new IntersectionObserver((entries) => {
@@ -1755,13 +794,9 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           }
         });
       }, { threshold: 0.12 });
-
       sections.forEach(sec => observer.observe(sec));
     }
 
-    /* -----------------------------------------------------------
-       4. 2027년 3월 27일 오후 6시 실시간 D-Day 카운터
-    ----------------------------------------------------------- */
     function updateDdayCounter() {
       const targetDate = new Date('2027-03-27T18:00:00+09:00').getTime();
       const now = new Date().getTime();
@@ -1772,6 +807,8 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       const mEl = document.getElementById('dday-mins');
       const sEl = document.getElementById('dday-secs');
       const msgEl = document.getElementById('dday-message');
+
+      if (!dEl) return;
 
       if (diff <= 0) {
         dEl.innerText = '0';
@@ -1794,186 +831,16 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       msgEl.innerHTML = `예근 <i class="fa-solid fa-heart text-pink-400 text-xs mx-0.5"></i> 해이의 결혼식이 <span class="text-pink-600 font-bold">${days}일</span> 남았습니다.`;
     }
 
-    /* -----------------------------------------------------------
-       5. 웨딩 포토 갤러리 (10개 감성 일러스트 플레이스홀더 + 더보기 기능)
-    ----------------------------------------------------------- */
-    let isGalleryExpanded = false;
-    let galleryItems = [
-      { type: 'placeholder', title: 'Spring', subtitle: '설레는 봄', gradient: 'linear-gradient(145deg, #fff5f8 0%, #fad4e3 100%)', icon: 'fa-heart' },
-      { type: 'placeholder', title: 'Promise', subtitle: '우리의 약속', gradient: 'linear-gradient(145deg, #fdf2f7 0%, #f5c6da 100%)', icon: 'fa-ring' },
-      { type: 'placeholder', title: 'March 27', subtitle: '봄날 저녁', gradient: 'linear-gradient(145deg, #fff8fa 0%, #f8d7e5 100%)', icon: 'fa-champagne-glasses' },
-      { type: 'placeholder', title: 'Bouquet', subtitle: '화이트 & 핑크', gradient: 'linear-gradient(145deg, #fceef4 0%, #f3bfd4 100%)', icon: 'fa-spa' },
-      { type: 'placeholder', title: 'Together', subtitle: '함께 걷는 길', gradient: 'linear-gradient(145deg, #fff6f9 0%, #fad9e6 100%)', icon: 'fa-dove' },
-      { type: 'placeholder', title: 'Happy', subtitle: '우리 두 사람', gradient: 'linear-gradient(145deg, #fdf0f5 0%, #f5c2d7 100%)', icon: 'fa-star' },
-      { type: 'placeholder', title: 'Smile', subtitle: '밝은 미소', gradient: 'linear-gradient(145deg, #fff5f8 0%, #fad4e3 100%)', icon: 'fa-face-smile' },
-      { type: 'placeholder', title: 'Love', subtitle: '영원한 사랑', gradient: 'linear-gradient(145deg, #fdf2f7 0%, #f5c6da 100%)', icon: 'fa-heart' },
-      { type: 'placeholder', title: 'Memories', subtitle: '소중한 추억', gradient: 'linear-gradient(145deg, #fff8fa 0%, #f8d7e5 100%)', icon: 'fa-camera' },
-      { type: 'placeholder', title: 'Forever', subtitle: '언제나 영원히', gradient: 'linear-gradient(145deg, #fceef4 0%, #f3bfd4 100%)', icon: 'fa-infinity' }
-    ];
-
-    let currentLightboxIndex = 0;
-
-    function renderGallery() {
-      const grid = document.getElementById('gallery-grid');
-      grid.innerHTML = '';
-
-      const maxInitialPhotos = 6;
-      const totalPhotos = galleryItems.length;
-      const displayCount = isGalleryExpanded ? totalPhotos : Math.min(totalPhotos, maxInitialPhotos);
-
-      for (let idx = 0; idx < displayCount; idx++) {
-        const item = galleryItems[idx];
-        const card = document.createElement('div');
-        // 아직 펼쳐지지 않았고, 6번째 사진이며, 전체 사진이 6장 이상일 때 오버레이 활성화
-        const isMoreButton = !isGalleryExpanded && idx === maxInitialPhotos - 1 && totalPhotos > maxInitialPhotos;
-
-        card.className = "cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative group bg-white";
-        
-        if (isMoreButton) {
-          card.onclick = expandGallery;
-        } else {
-          card.onclick = () => openLightbox(idx);
-        }
-
-        let innerHTML = '';
-        if (item.type === 'image') {
-          innerHTML += `<img src="${item.src}" alt="웨딩 갤러리 ${idx + 1}" class="w-full h-full object-cover transition-transform duration-500 ${isMoreButton ? '' : 'group-hover:scale-105'}" />`;
-        } else {
-          innerHTML += `
-            <div class="w-full h-full flex flex-col items-center justify-center p-2 text-center transition-transform duration-500 ${isMoreButton ? '' : 'group-hover:scale-105'}" style="background: ${item.gradient}">
-              <div class="w-7 h-7 rounded-full bg-white/80 text-pink-400 flex items-center justify-center mb-1.5 shadow-2xs">
-                <i class="fa-solid ${item.icon} text-sm"></i>
-              </div>
-              <p class="font-en italic text-xs text-pink-600 font-medium">${item.title}</p>
-            </div>
-          `;
-        }
-
-        // 6번째 슬롯(더보기) 딤(Dim) 처리 및 카운트 뱃지 삽입
-        if (isMoreButton) {
-          const remainCount = totalPhotos - maxInitialPhotos + 1; // 10 - 6 + 1 = 5
-          innerHTML += `
-            <div class="absolute inset-0 bg-stone-900/50 backdrop-blur-[2px] flex flex-col items-center justify-center transition-opacity hover:bg-stone-900/60">
-              <i class="fa-solid fa-plus text-white/90 text-lg mb-0.5"></i>
-              <span class="text-white/95 font-en text-xl font-bold">${remainCount}</span>
-            </div>
-          `;
-        }
-
-        card.innerHTML = innerHTML;
-        grid.appendChild(card);
-      }
-    }
-
-    function expandGallery() {
-      isGalleryExpanded = true;
-      // renderGallery();
-      showToast('숨겨진 갤러리 사진이 모두 펼쳐졌습니다 💗');
-    }
-
-    // 모바일 로딩 속도 및 깃허브 트래픽 절약을 위한 이미지 자동 리사이즈/압축 함수
-    function compressImageFile(file, maxWidth = 1200, quality = 0.82) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const img = new Image();
-          img.onload = function() {
-            let width = img.width;
-            let height = img.height;
-            if (width > maxWidth) {
-              height = Math.round((height * maxWidth) / width);
-              width = maxWidth;
-            }
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL('image/jpeg', quality));
-          };
-          img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    async function handleCoverPhotoUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const compressedDataUrl = await compressImageFile(file, 1200, 0.85);
-      const img = document.getElementById('cover-photo-img');
-      const defaultArt = document.getElementById('cover-default-art');
-      img.src = compressedDataUrl;
-      img.classList.remove('hidden');
-      defaultArt.classList.add('hidden');
-      showToast('메인 웨딩 사진이 모바일 최적화 용량으로 적용되었습니다!');
-    }
-
-    async function handleGalleryUpload(event) {
-      // 업로드 최대 장수를 10장으로 상향
-      const files = Array.from(event.target.files).slice(0, 10);
-      if (!files.length) return;
-
-      for (let idx = 0; idx < files.length; idx++) {
-        const compressedDataUrl = await compressImageFile(files[idx], 1080, 0.82);
-        galleryItems[idx] = {
-          type: 'image',
-          src: compressedDataUrl
-        };
-      }
-      
-      // 새로 업로드하면 갤러리를 접은 상태로 초기화
-      isGalleryExpanded = false;
-      // renderGallery();
-      showToast(`${files.length}장의 갤러리 사진이 최적화되어 적용되었습니다!`);
-    }
-
-    function openLightbox(index) {
-      currentLightboxIndex = index;
-      updateLightboxView();
-      const modal = document.getElementById('lightbox-modal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-
-    function changeLightboxSlide(step) {
-      currentLightboxIndex = (currentLightboxIndex + step + galleryItems.length) % galleryItems.length;
-      updateLightboxView();
-    }
-
-    function updateLightboxView() {
-      const container = document.getElementById('lightbox-content');
-      const item = galleryItems[currentLightboxIndex];
-      if (item.type === 'image') {
-        container.innerHTML = `<img src="${item.src}" class="w-full h-full object-cover" alt="확대 사진" />`;
-      } else {
-        container.innerHTML = `
-          <div class="w-full h-full flex flex-col items-center justify-center p-8 text-center" style="background: ${item.gradient}">
-            <div class="w-16 h-16 rounded-full bg-white/85 text-pink-400 flex items-center justify-center mb-4 shadow-sm">
-              <i class="fa-solid ${item.icon} text-2xl"></i>
-            </div>
-            <p class="font-en italic text-2xl text-pink-600 font-semibold">${item.title}</p>
-            <p class="text-sm font-sans-kr text-stone-600 mt-2">${item.subtitle}</p>
-            <p class="text-xs font-sans-kr text-stone-400 mt-6">실제 웨딩 촬영 사진을 넣으시면 이 자리에 크게 표시됩니다.</p>
-          </div>
-        `;
-      }
-    }
-
-    /* -----------------------------------------------------------
-       6. 봄 벚꽃잎 캔버스 애니메이션 (Toggle 가능)
-    ----------------------------------------------------------- */
     let petalsActive = true;
     let petals = [];
     let petalCanvas, petalCtx;
 
     function initPetals() {
       petalCanvas = document.getElementById('petal-canvas');
+      if (!petalCanvas) return;
       petalCtx = petalCanvas.getContext('2d');
       resizePetalCanvas();
       window.addEventListener('resize', resizePetalCanvas);
-
-      // 은은하게 18개의 꽃잎 생성
       petals = Array.from({ length: 18 }, () => createPetal());
       requestAnimationFrame(animatePetals);
     }
@@ -2000,22 +867,18 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     function animatePetals() {
       if (petalCtx && petalCanvas) {
         petalCtx.clearRect(0, 0, petalCanvas.width, petalCanvas.height);
-
         if (petalsActive) {
           petals.forEach((p, idx) => {
             p.y += p.speedY;
             p.x += p.speedX + Math.sin(p.angle) * 0.25;
             p.angle += p.spin;
-
             if (p.y > petalCanvas.height + 20) {
               petals[idx] = createPetal(false);
             }
-
             petalCtx.save();
             petalCtx.translate(p.x, p.y);
             petalCtx.rotate(p.angle);
             petalCtx.beginPath();
-            // 꽃잎 모양 그리기
             petalCtx.moveTo(0, 0);
             petalCtx.bezierCurveTo(p.size, -p.size, p.size * 1.4, p.size * 0.6, 0, p.size * 1.3);
             petalCtx.bezierCurveTo(-p.size * 1.4, p.size * 0.6, -p.size, -p.size, 0, 0);
@@ -2028,16 +891,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       requestAnimationFrame(animatePetals);
     }
 
-    function togglePetals() {
-      petalsActive = !petalsActive;
-      const statusText = document.getElementById('petal-status-text');
-      statusText.innerText = petalsActive ? '봄꽃 효과 ON' : '봄꽃 효과 OFF';
-      showToast(petalsActive ? '봄 벚꽃잎 효과가 켜졌습니다.' : '봄 벚꽃잎 효과가 꺼졌습니다.');
-    }
-
-    /* -----------------------------------------------------------
-       7. 아코디언, 클립보드 복사, 모달 기능
-    ----------------------------------------------------------- */
     function toggleAccordion(id) {
       const content = document.getElementById(id);
       const icon = document.getElementById(`${id}-icon`);
@@ -2092,7 +945,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     function copyAccount(elementId, ownerName, btnElement) {
       const text = document.getElementById(elementId).innerText.trim();
       if (text.includes('추후 입력') || text.includes('공란')) {
-        showToast(`${ownerName}님의 계좌번호가 아직 공란입니다. 우측 상단 [내용 수정]에서 입력해 주세요.`);
+        showToast(`${ownerName}님의 계좌번호가 아직 공란입니다.`);
         return;
       }
       copyText(text, `${ownerName}님의 계좌번호가 복사되었습니다 💗`, btnElement);
@@ -2113,207 +966,66 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       }, 2500);
     }
 
-    function openStudioModal() {
-      const m = document.getElementById('studio-modal');
-      m.classList.remove('hidden');
-      m.classList.add('flex');
-    }
-
-    function closeModal(id) {
-      const m = document.getElementById(id);
-      m.classList.add('hidden');
-      m.classList.remove('flex');
-    }
-
-    function openTmapFallback(e) {
-      e.preventDefault();
-      window.open('https://map.naver.com/p/search/%EC%84%B8%EC%9D%B8%ED%8A%B8%EB%A9%94%EB%A6%AC%EC%97%98%20%EA%B0%95%EB%82%A8', '_blank');
-      showToast('세인트메리엘 강남 위치 안내 페이지로 이동합니다.');
-    }
-
     /* -----------------------------------------------------------
-       8. 제작 스튜디오 실시간 수정 및 배포용 순수 HTML 다운로드
+       갤러리 더보기(+5) & 사진 터치 시 확대 모달
     ----------------------------------------------------------- */
-    function switchStudioTab(tab) {
-      const editBtn = document.getElementById('studio-tab-edit');
-      const deployBtn = document.getElementById('studio-tab-deploy');
-      const editPanel = document.getElementById('studio-panel-edit');
-      const deployPanel = document.getElementById('studio-panel-deploy');
-
-      if (tab === 'edit') {
-        editBtn.className = "py-2 rounded-xl bg-white text-pink-600 font-bold shadow-xs";
-        deployBtn.className = "py-2 rounded-xl text-stone-600 font-medium";
-        editPanel.classList.remove('hidden');
-        deployPanel.classList.add('hidden');
-      } else {
-        deployBtn.className = "py-2 rounded-xl bg-white text-pink-600 font-bold shadow-xs";
-        editBtn.className = "py-2 rounded-xl text-stone-600 font-medium";
-        deployPanel.classList.remove('hidden');
-        editPanel.classList.add('hidden');
-      }
-    }
-
-    function updateLiveContent() {
-      const hall = document.getElementById('input-venue-hall').value.trim();
-      const greeting = document.getElementById('input-greeting-body').value;
-      const parkingNoticeEl = document.getElementById('input-parking-notice');
-
-      document.getElementById('display-venue-hall').innerText = hall || '올림피아센터빌딩 (단독홀)';
-      document.getElementById('greeting-body').innerText = greeting;
-      if (parkingNoticeEl) {
-        document.getElementById('display-parking-notice').innerText = parkingNoticeEl.value;
-      }
-
-      const accMap = [
-        ['input-acc-groom-self', 'acc-groom-self'],
-        ['input-acc-groom-father', 'acc-groom-father'],
-        ['input-acc-groom-mother', 'acc-groom-mother'],
-        ['input-acc-bride-self', 'acc-bride-self'],
-        ['input-acc-bride-father', 'acc-bride-father'],
-        ['input-acc-bride-mother', 'acc-bride-mother']
-      ];
-
-      accMap.forEach(([inputId, targetId]) => {
-        const val = document.getElementById(inputId).value.trim();
-        const finalVal = val || '[은행명] 계좌번호 추후 입력 (공란)';
-        document.getElementById(targetId).innerText = finalVal;
-        window.__SECURE_ACCOUNT_STORE__[targetId] = encodeUTF8ToBase64(finalVal);
+    function showAllPhotos() {
+      const overlay = document.getElementById('more-dimmed-layer');
+      if (overlay) overlay.remove();
+      
+      document.getElementById('gallery-more-box').onclick = function() { 
+        openModal('GH_01627-0.jpg'); 
+      };
+      
+      document.querySelectorAll('.extra-photo').forEach(el => {
+        el.classList.remove('hidden');
       });
+      
+      showToast('10장의 웨딩 사진이 모두 펼쳐졌습니다 💗');
     }
 
-    function downloadRobotsTxt() {
-      const content = "User-agent: *\nDisallow: /\n";
-      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'robots.txt';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      showToast('검색엔진 차단용 robots.txt 파일이 다운로드되었습니다!');
+    function openModal(imageSrc) {
+      const modal = document.getElementById('photo-modal');
+      const modalImg = document.getElementById('modal-image-target');
+      
+      if (!modal || !modalImg) return;
+      
+      modalImg.src = imageSrc;
+      modal.classList.remove('hidden');
+      
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modal.classList.add('opacity-100');
+      }, 10);
+      
+      document.body.style.overflow = 'hidden';
     }
 
-    function downloadCleanInvitationHTML() {
-      updateLiveContent();
-
-      // 클론 문서 생성 후 편집용 UI 제거 및 HTML 내 계좌번호 평문 제거(Base64 난독화 주입)
-      const clone = document.documentElement.cloneNode(true);
-      const hideIds = ['editor-floating-top', 'cover-upload-btn', 'greeting-preset-bar', 'gallery-upload-bar', 'studio-modal'];
-      hideIds.forEach(id => {
-        const el = clone.querySelector(`#${id}`);
-        if (el) el.remove();
-      });
-
-      // 정적 HTML 소스코드 상에는 계좌번호 평문 대신 보안 플레이스홀더만 남기고 스크립트에서 Base64로 복원
-      const accountIds = [
-        'acc-groom-self', 'acc-groom-father', 'acc-groom-mother',
-        'acc-bride-self', 'acc-bride-father', 'acc-bride-mother'
-      ];
-      accountIds.forEach(id => {
-        const el = clone.querySelector(`#${id}`);
-        if (el) el.textContent = '보안 계좌 정보 불러오는 중...';
-      });
-
-      let htmlContent = '<!DOCTYPE html>\n' + clone.outerHTML;
-      const serializedStore = JSON.stringify(window.__SECURE_ACCOUNT_STORE__, null, 2);
-      htmlContent = htmlContent.replace(
-        /window\.__SECURE_ACCOUNT_STORE__\s*=\s*\{[\s\S]*?\};/,
-        `window.__SECURE_ACCOUNT_STORE__ = ${serializedStore};`
-      );
-
-      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'index.html';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      showToast('보안 난독화가 적용된 하객 배포용(index.html) 파일이 다운로드되었습니다!');
+    function closeModal() {
+      const modal = document.getElementById('photo-modal');
+      if (!modal) return;
+      
+      modal.classList.remove('opacity-100');
+      modal.classList.add('opacity-0');
+      
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        const modalImg = document.getElementById('modal-image-target');
+        if (modalImg) modalImg.src = '';
+      }, 300);
+      
+      document.body.style.overflow = 'auto';
     }
 
-    /* -----------------------------------------------------------
-       9. 페이지 로드 초기화
-    ----------------------------------------------------------- */
     window.onload = function () {
       hydrateSecureAccounts();
       initSecurityGuards();
-      // renderGallery();
       updateDdayCounter();
       setInterval(updateDdayCounter, 1000);
       initRevealObserver();
       handleScrollGradient();
-      initPetals(); 
-    }
-
-  /* -----------------------------------------------------------
-       10. 갤러리 더보기 & 사진 확대 모달 함수
-    ----------------------------------------------------------- */
- ;function showAllPhotos()      {
-  // 6번 사진 위의 까만 +5 오버레이 제거
-  const overlay = document.querySelector('#gallery-more-box div');
-  if (overlay) overlay.remove();
-  // 6번 사진을 터치했을 때 사진 확대 모달이 뜨도록 변경
-  document.getElementById('gallery-more-box').onclick = function() { openModal('GH_01627-0.jpg'); };
-  // 숨겨져 있던 7~10번 사진 전체 표시
-  document.querySelectorAll('.extra-photo').forEach(el => el.classList.remove('hidden'));
-}
-  // 사진 터치 시 확대 모달 열기
-function openModal(imageSrc) {
-  const modal = document.getElementById('photo-modal');
-  const modalImg = document.getElementById('modal-image-target');
-  
-  if (!modal || !modalImg) return;
-  
-  modalImg.src = imageSrc;
-  modal.classList.remove('hidden');
-  
-  // 부드러운 페이드인 애니메이션
-  setTimeout(() => {
-    modal.classList.remove('opacity-0');
-    modal.classList.add('opacity-100');
-  }, 10);
-  
-  // 모달이 열려 있는 동안 뒷배경 스크롤 방지
-  document.body.style.overflow = 'hidden';
-}
-
-// 닫기 버튼 또는 배경 터치 시 모달 닫기
-function closeModal() {
-  const modal = document.getElementById('photo-modal');
-  if (!modal) return;
-  
-  modal.classList.remove('opacity-100');
-  modal.classList.add('opacity-0');
-  
-  setTimeout(() => {
-    modal.classList.add('hidden');
-    const modalImg = document.getElementById('modal-image-target');
-    if (modalImg) modalImg.src = '';
-  }, 300);
-  
-  // 스크롤 복원
-  document.body.style.overflow = 'auto';
-}
+      initPetals();
+    };
   </script>
-        
-
-                
-<!-- 웨딩 사진 원본 확대 모달 레이어 -->
-<div id="photo-modal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 opacity-0" onclick="closeModal()">
-  <!-- 닫기 버튼 (X) -->
-  <button class="absolute top-5 right-5 text-white/90 hover:text-white text-3xl font-light p-2 z-10 focus:outline-none" onclick="closeModal()">
-    <i class="fa-solid fa-xmark"></i>
-  </button>
-  
-  <!-- 원본 사진 확대 컨테이너 -->
-  <div class="relative max-w-full max-h-[88vh] flex items-center justify-center" onclick="event.stopPropagation()">
-    <img id="modal-image-target" src="" alt="확대 웨딩 사진" class="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl transition-transform duration-300">
-  </div>
-</div>
-</body></html>
+</body>
+</html>

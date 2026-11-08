@@ -454,8 +454,9 @@
           </div>
         </div>
 
-        <!-- 교통편 안내 -->
+<!-- 교통편 안내 (지하철, 셔틀버스, 버스) -->
         <div class="p-6 space-y-5 text-left font-sans-kr text-xs leading-relaxed text-stone-600">
+          <!-- 지하철 안내 -->
           <div class="flex items-start gap-3">
             <div class="w-7 h-7 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center shrink-0 mt-0.5">
               <i class="fa-solid fa-train-subway"></i>
@@ -467,6 +468,7 @@
             </div>
           </div>
 
+          <!-- 셔틀버스 안내 -->
           <div class="p-3.5 rounded-2xl bg-gradient-to-r from-pink-50 via-rose-50/70 to-pink-50 border border-pink-200/80 flex items-start gap-3 shadow-2xs">
             <div class="w-7 h-7 rounded-full bg-pink-500 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               <i class="fa-solid fa-van-shuttle text-[11px]"></i>
@@ -481,6 +483,7 @@
             </div>
           </div>
 
+          <!-- 버스 안내 -->
           <div class="flex items-start gap-3">
             <div class="w-7 h-7 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center shrink-0 mt-0.5">
               <i class="fa-solid fa-bus"></i>
@@ -497,14 +500,7 @@
               </p>
             </div>
           </div>
-
-          <div class="flex items-start gap-3 pt-1 border-t border-pink-100/80">
-            <div class="w-7 h-7 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center shrink-0 mt-1">
-              <i class="fa-solid fa-circle-info"></i>
-            </div>
-          </div>
         </div>
-      </div>
     </section>
 
     <!-- ==========================================
@@ -635,30 +631,30 @@
     <span id="toast-text">복사되었습니다 💗</span>
   </div>
 
-  <!-- 웨딩 사진 원본 확대 & 슬라이드 모달 레이어 -->
-  <div id="photo-modal" class="fixed inset-0 z-50 hidden bg-black/95 backdrop-blur-md flex items-center justify-center p-2 transition-opacity duration-300 opacity-0 select-none" onclick="closeModal()">
+<!-- 웨딩 사진 원본 확대 & 슬라이드 모달 레이어 -->
+  <div id="photo-modal" class="fixed inset-0 z-50 hidden bg-black/95 backdrop-blur-md flex items-center justify-center p-1.5 transition-opacity duration-300 opacity-0 select-none" onclick="closeModal()">
     <!-- 닫기 버튼 (X) -->
     <button class="absolute top-4 right-4 text-white/80 hover:text-white text-3xl font-light p-2 z-20 focus:outline-none" onclick="closeModal()">
       <i class="fa-solid fa-xmark"></i>
     </button>
 
     <!-- 사진 카운터 (예: 1 / 10) -->
-    <div id="modal-counter" class="absolute top-6 left-1/2 -translate-x-1/2 text-white/80 text-xs font-en tracking-widest z-20">
+    <div id="modal-counter" class="absolute top-5 left-1/2 -translate-x-1/2 text-white/80 text-xs font-en tracking-widest z-20">
       1 / 10
     </div>
 
     <!-- 이전 사진 버튼 (<) -->
-    <button class="absolute left-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-3 z-20 focus:outline-none" onclick="event.stopPropagation(); prevPhoto();">
+    <button class="absolute left-1 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-3 z-20 focus:outline-none" onclick="event.stopPropagation(); prevPhoto();">
       <i class="fa-solid fa-chevron-left"></i>
     </button>
 
-    <!-- 원본 사진 컨테이너 -->
-    <div class="relative max-w-full max-h-[85vh] flex items-center justify-center" onclick="event.stopPropagation()">
-      <img id="modal-image-target" src="" alt="확대 웨딩 사진" class="max-w-full max-h-[82vh] object-contain rounded-xl shadow-2xl transition-all duration-200">
+    <!-- 원본 사진 컨테이너 (화면 좌우 96%, 세로 92%까지 꽉 차게 확장) -->
+    <div class="relative w-full max-w-[96vw] max-h-[92vh] flex items-center justify-center" onclick="event.stopPropagation()">
+      <img id="modal-image-target" src="" alt="확대 웨딩 사진" class="w-full h-auto max-h-[90vh] object-contain rounded-2xl shadow-2xl transition-all duration-200">
     </div>
 
     <!-- 다음 사진 버튼 (>) -->
-    <button class="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-3 z-20 focus:outline-none" onclick="event.stopPropagation(); nextPhoto();">
+    <button class="absolute right-1 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl p-3 z-20 focus:outline-none" onclick="event.stopPropagation(); nextPhoto();">
       <i class="fa-solid fa-chevron-right"></i>
     </button>
   </div>

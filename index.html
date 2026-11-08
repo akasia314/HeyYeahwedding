@@ -1230,7 +1230,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       </div>
     </section>
 
-    <!-- ==========================================
+<!-- ==========================================
          5. 오시는 길 (LOCATION - 세인트메리엘 강남)
     =========================================== -->
     <section class="reveal-section px-6 py-10 visible">
@@ -1240,14 +1240,11 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       </div>
 
       <div class="glass-card rounded-3xl overflow-hidden">
-        <!-- 웨딩홀 명칭, 주소, 전화번호 및 원클릭 복사/전화 버튼 헤더 -->
+        <!-- 웨딩홀 명칭, 주소, 전화번호 및 원클릭 복사 헤더 -->
         <div class="p-6 text-center bg-white/60 border-b border-pink-100">
           <h3 id="display-venue-name" class="text-xl font-myeongjo font-bold text-stone-800">세인트메리엘 강남</h3>
           <p id="display-venue-hall" class="text-sm text-pink-600 font-medium mt-1">세인트메리엘 (세인트홀, 2층)</p>
           <p id="display-venue-address" class="text-xs font-sans-kr text-stone-600 mt-2 leading-relaxed">서울특별시 강남구 논현로 79길 72 올림피아센터빌딩</p>
-          <p class="text-xs font-sans-kr text-stone-500 mt-1">
-            Tel. <a href="tel:02-538-3300" id="display-venue-tel" class="underline decoration-pink-300 hover:text-pink-600 font-medium" target="_blank" rel="noopener noreferrer">02-538-3300</a>
-          </p>
 
           <div class="mt-4 flex justify-center gap-2">
             <button onclick="copyText(document.getElementById('display-venue-address').innerText, '웨딩홀 주소가 복사되었습니다 💗', this)" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-pink-50 hover:bg-pink-100 border border-pink-200 text-xs font-sans-kr text-pink-700 font-medium transition shadow-2xs">
@@ -1257,13 +1254,85 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           </div>
         </div>
 
-        <!-- 네이버 지도 바로가기 버튼 -->
-        <div class="p-6 border-b border-pink-100 bg-stone-50 text-center flex flex-col items-center justify-center gap-3">
-          <p class="text-[11px] font-sans-kr text-stone-500 mb-1">자세한 위치는 네이버 지도로 확인해 보세요</p>
-          <a href="https://map.naver.com/p/search/%EC%84%B8%EC%9D%B8%ED%8A%B8%EB%A9%94%EB%A6%AC%EC%97%98%20%EA%B0%95%EB%82%A8" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full max-w-[280px] py-3.5 rounded-2xl bg-[#03C75A] hover:bg-[#02b351] text-white font-sans-kr shadow-md transition-colors">
-            <span class="w-5 h-5 rounded bg-white text-[#03C75A] text-[11px] font-black flex items-center justify-center">N</span>
-            <span class="text-[13px] font-bold">네이버 지도에서 보기</span>
-          </a>
+        <!-- 네이버 지도 뷰어 및 길찾기 영역 -->
+        <div class="border-b border-pink-100 bg-white">
+          <!-- 상단 네이버 지도 타이틀 헤더 -->
+          <div class="bg-[#03C75A] px-4 py-2 flex items-center justify-between text-white">
+            <span class="text-xs font-bold tracking-wider flex items-center gap-1.5">
+              <span class="bg-white text-[#03C75A] font-black rounded px-1 text-[10px]">N</span> NAVER 지도
+            </span>
+            <span class="text-[11px] opacity-90 font-medium">세인트메리엘 강남</span>
+          </div>
+
+          <!-- 실제 지도 그래픽 뷰어 (강남역 1·4번 출구 및 세인트메리엘 핀 표시) -->
+          <div class="relative w-full aspect-[16/11] bg-[#f4f3ef] overflow-hidden">
+            <svg class="w-full h-full" viewBox="0 0 400 270" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- 배경 지도 블록 -->
+              <rect width="400" height="270" fill="#F4F3F0"/>
+              <!-- 테헤란로 및 주요 간선도로 -->
+              <rect x="0" y="30" width="400" height="28" fill="#FFFFFF" stroke="#E5E3DC" stroke-width="1.5"/>
+              <text x="180" y="48" font-family="'Pretendard', sans-serif" font-size="11" fill="#999388" font-weight="bold">테헤란로</text>
+              <!-- 강남대로 (세로 도로) -->
+              <rect x="50" y="0" width="30" height="270" fill="#FFFFFF" stroke="#E5E3DC" stroke-width="1.5"/>
+              <text x="65" y="160" font-family="'Pretendard', sans-serif" font-size="10" fill="#999388" font-weight="bold" transform="rotate(90 65 160)">강남대로</text>
+              <!-- 논현로 및 이면도로 골목길 망 -->
+              <rect x="235" y="58" width="18" height="212" fill="#FFFFFF" stroke="#EAE8E1" stroke-width="1.2"/>
+              <rect x="50" y="115" width="350" height="18" fill="#FFFFFF" stroke="#EAE8E1" stroke-width="1.2"/>
+              <rect x="50" y="180" width="350" height="20" fill="#FFFFFF" stroke="#EAE8E1" stroke-width="1.2"/>
+              <text x="145" y="194" font-family="'Pretendard', sans-serif" font-size="9" fill="#B0AAA0">논현로 79길</text>
+              <!-- 2호선 / 신분당선 강남역 지하철 노선 바 -->
+              <rect x="0" y="24" width="85" height="10" rx="3" fill="#00A84D"/>
+              <text x="8" y="32" font-family="'Pretendard', sans-serif" font-size="8" fill="#FFFFFF" font-weight="bold">② 강남역</text>
+              <rect x="50" y="34" width="10" height="85" rx="3" fill="#D4003B"/>
+              <!-- 강남역 1번 출구 셔틀버스 승차장 핀 -->
+              <circle cx="88" cy="44" r="9" fill="#00A84D"/>
+              <text x="88" y="48" font-family="'Pretendard', sans-serif" font-size="10" fill="#FFFFFF" font-weight="bold" text-anchor="middle">1</text>
+              <rect x="100" y="37" width="55" height="16" rx="4" fill="#00A84D"/>
+              <text x="127" y="48" font-family="'Pretendard', sans-serif" font-size="8" fill="#FFFFFF" font-weight="bold" text-anchor="middle">셔틀 탑승</text>
+              <!-- 강남역 4번 출구 배지 -->
+              <circle cx="55" cy="124" r="8" fill="#D4003B"/>
+              <text x="55" y="127.5" font-family="'Pretendard', sans-serif" font-size="9" fill="#FFFFFF" font-weight="bold" text-anchor="middle">4</text>
+              <!-- 도보 경로 안내 점선 (우리은행 우회전 루트) -->
+              <path d="M90 44 L244 44 L244 190 L300 190" stroke="#03C75A" stroke-width="3" stroke-dasharray="4 3" stroke-linecap="round"/>
+              <!-- 주요 랜드마크 포인트 -->
+              <circle cx="244" cy="44" r="3" fill="#03C75A"/>
+              <text x="252" y="47" font-family="'Pretendard', sans-serif" font-size="9" fill="#666157" font-weight="bold">우리은행</text>
+              <text x="75" y="127" font-family="'Pretendard', sans-serif" font-size="9" fill="#666157">358타워</text>
+              <text x="260" y="145" font-family="'Pretendard', sans-serif" font-size="8" fill="#999388">역삼1동 주민센터</text>
+              <!-- 세인트메리엘 웨딩홀 위치 마커 (네이버 초록색 핀 & 그림자) -->
+              <ellipse cx="308" cy="192" rx="14" ry="4" fill="#000000" fill-opacity="0.18"/>
+              <path d="M308 152 C296 152 287 161 287 172 C287 186 308 202 308 202 C308 202 329 186 329 172 C329 161 320 152 308 152 Z" fill="#03C75A" filter="drop-shadow(0px 3px 5px rgba(3,199,90,0.35))"/>
+              <circle cx="308" cy="171" r="7" fill="#FFFFFF"/>
+              <!-- 네이버 지도 스타일 세인트메리엘 말풍선 라벨 -->
+              <rect x="252" y="120" width="112" height="28" rx="6" fill="#1EC800" filter="drop-shadow(0px 4px 8px rgba(0,0,0,0.18))"/>
+              <polygon points="308,150 302,148 314,148" fill="#1EC800"/>
+              <text x="308" y="138" font-family="'Pretendard', sans-serif" font-size="11" fill="#FFFFFF" font-weight="bold" text-anchor="middle">세인트메리엘</text>
+            </svg>
+
+            <!-- 네이버 지도 앱 길찾기 바로가기 오버레이 버튼 -->
+            <div class="absolute bottom-3 right-3">
+              <a href="https://map.naver.com/p/search/%EC%84%B8%EC%9D%B8%ED%8A%B8%EB%A9%94%EB%A6%AC%EC%97%98%20%EA%B0%95%EB%82%A8" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="inline-flex items-center gap-1.5 bg-[#03C75A] hover:bg-[#02b351] text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-md transition">
+                <span>네이버 지도로 보기</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- 하단 지도 앱 3사 원클릭 길찾기 바 -->
+          <div class="grid grid-cols-3 divide-x divide-stone-200 border-t border-stone-100 bg-stone-50 text-xs py-3 text-center font-semibold">
+            <a href="https://map.naver.com/p/search/%EC%84%B8%EC%9D%B8%ED%8A%B8%EB%A9%94%EB%A6%AC%EC%97%98%20%EA%B0%95%EB%82%A8" target="_blank" rel="noopener noreferrer" class="text-[#03C75A] hover:opacity-80 py-0.5 flex items-center justify-center gap-1">
+              <span class="w-4 h-4 rounded bg-[#03C75A] text-white text-[9px] font-black flex items-center justify-center">N</span> 네이버 지도
+            </a>
+            <a href="https://map.kakao.com/link/search/세인트메리엘" target="_blank" rel="noopener noreferrer" class="text-[#3C1E1E] hover:opacity-80 py-0.5 flex items-center justify-center gap-1">
+              <span class="w-4 h-4 rounded bg-[#FEE500] text-[#3C1E1E] text-[9px] font-black flex items-center justify-center">K</span> 카카오맵
+            </a>
+            <a href="https://tmap.life/search?name=세인트메리엘" target="_blank" rel="noopener noreferrer" class="text-[#1155CC] hover:opacity-80 py-0.5 flex items-center justify-center gap-1">
+              <span class="w-4 h-4 rounded bg-[#1155CC] text-white text-[9px] font-bold flex items-center justify-center">T</span> 티맵
+            </a>
+          </div>
         </div>
 
         <!-- 대중교통, 셔틀버스, 버스 및 자가용 정중 안내 -->

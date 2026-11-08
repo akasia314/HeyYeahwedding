@@ -2248,11 +2248,13 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       setInterval(updateDdayCounter, 1000);
       initRevealObserver();
       handleScrollGradient();
-      initPetals();
-    };
-  </script>
-        
-function showAllPhotos() {
+      initPetals(); 
+    }
+
+  /* -----------------------------------------------------------
+       10. 갤러리 더보기 & 사진 확대 모달 함수
+    ----------------------------------------------------------- */
+ ;function showAllPhotos()      {
   // 6번 사진 위의 까만 +5 오버레이 제거
   const overlay = document.querySelector('#gallery-more-box div');
   if (overlay) overlay.remove();
@@ -2298,6 +2300,9 @@ function closeModal() {
   // 스크롤 복원
   document.body.style.overflow = 'auto';
 }
+  </script>
+        
+
                 
 <!-- 웨딩 사진 원본 확대 모달 레이어 -->
 <div id="photo-modal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 opacity-0" onclick="closeModal()">

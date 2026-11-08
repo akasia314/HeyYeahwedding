@@ -1216,17 +1216,29 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       
 
       <!-- 10칸 감성 그리드 갤러리 (3열) -->
+<!-- 10칸 감성 그리드 갤러리 (3열) -->
       <div id="gallery-grid" class="grid grid-cols-3 gap-2">
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative group bg-white"><img src="GH_00204-0.jpg" class="w-full h-full object-cover" onclick="openModal(this.src)"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative group bg-white"><img src="GH_00334-0.jpg" class="w-full h-full object-cover" onclick="openModal(this.src)"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative group bg-white"><img src="GH_01138-0.jpg" class="w-full h-full object-cover" onclick="openModal(this.src)"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative group bg-white"><img src="GH_01222-1.jpg" class="w-full h-full object-cover" onclick="openModal(this.src)"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative group bg-white"><img src="GH_01288-1.jpg" class="w-full h-full object-cover" onclick="openModal(this.src)"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative group bg-white"><img src="GH_01627-0.jpg" class="w-full h-full object-cover" onclick="openModal(this.src)"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative group bg-white"><img src="GH_02213-0.jpg" class="w-full h-full object-cover" onclick="openModal(this.src)"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative group bg-white"><img src="GH_02374-1.jpg" class="w-full h-full object-cover" onclick="openModal(this.src)"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative group bg-white"><img src="GH_02438-0.jpg" class="w-full h-full object-cover" onclick="openModal(this.src)"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative group bg-white"><img src="GH_02584-1.jpg" class="w-full h-full object-cover" onclick="openModal(this.src)"></div>
+        <!-- 1~5번째 사진 -->
+        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_00204-0.jpg')"><img src="GH_00204-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_00334-0.jpg')"><img src="GH_00334-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_01138-0.jpg')"><img src="GH_01138-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_01222-1.jpg')"><img src="GH_01222-1.jpg" class="w-full h-full object-cover"></div>
+        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_01288-1.jpg')"><img src="GH_01288-1.jpg" class="w-full h-full object-cover"></div>
+
+        <!-- 6번째 사진 (+5 더보기 오버레이) -->
+        <div id="gallery-more-box" class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative bg-white" onclick="showAllPhotos()">
+          <img src="GH_01627-0.jpg" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-stone-900/50 backdrop-blur-[2px] flex flex-col items-center justify-center text-white">
+            <span class="text-xl font-light mb-0.5">+</span>
+            <span class="font-en text-lg font-bold">5</span>
+          </div>
+        </div>
+
+        <!-- 7~10번째 사진 (처음엔 hidden으로 숨김) -->
+        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02213-0.jpg')"><img src="GH_02213-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02374-1.jpg')"><img src="GH_02374-1.jpg" class="w-full h-full object-cover"></div>
+        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02438-0.jpg')"><img src="GH_02438-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02584-1.jpg')"><img src="GH_02584-1.jpg" class="w-full h-full object-cover"></div>
       </div>
     </section>
 
@@ -1852,7 +1864,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
 
     function expandGallery() {
       isGalleryExpanded = true;
-      renderGallery();
+      // renderGallery();
       showToast('숨겨진 갤러리 사진이 모두 펼쳐졌습니다 💗');
     }
 
@@ -1909,7 +1921,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       
       // 새로 업로드하면 갤러리를 접은 상태로 초기화
       isGalleryExpanded = false;
-      renderGallery();
+      // renderGallery();
       showToast(`${files.length}장의 갤러리 사진이 최적화되어 적용되었습니다!`);
     }
 
@@ -2228,7 +2240,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     window.onload = function () {
       hydrateSecureAccounts();
       initSecurityGuards();
-      renderGallery();
+      // renderGallery();
       updateDdayCounter();
       setInterval(updateDdayCounter, 1000);
       initRevealObserver();
@@ -2236,5 +2248,14 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       initPetals();
     };
   </script>
-
+        
+function showAllPhotos() {
+  // 6번 사진 위의 까만 +5 오버레이 제거
+  const overlay = document.querySelector('#gallery-more-box div');
+  if (overlay) overlay.remove();
+  // 6번 사진을 터치했을 때 사진 확대 모달이 뜨도록 변경
+  document.getElementById('gallery-more-box').onclick = function() { openModal('GH_01627-0.jpg'); };
+  // 숨겨져 있던 7~10번 사진 전체 표시
+  document.querySelectorAll('.extra-photo').forEach(el => el.classList.remove('hidden'));
+}
 </body></html>

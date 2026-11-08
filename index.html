@@ -375,7 +375,7 @@
       </div>
     </section>
 
-    <!-- ==========================================
+<!-- ==========================================
          4. 웨딩 포토 갤러리 (GALLERY)
     =========================================== -->
     <section class="reveal-section px-6 py-10 text-center visible">
@@ -386,11 +386,11 @@
       <!-- 10칸 감성 그리드 갤러리 (3열) -->
       <div id="gallery-grid" class="grid grid-cols-3 gap-2">
         <!-- 1~5번째 사진 -->
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_00204-0.jpg')"><img src="GH_00204-0.jpg" class="w-full h-full object-cover"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_00334-0.jpg')"><img src="GH_00334-0.jpg" class="w-full h-full object-cover"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_01138-0.jpg')"><img src="GH_01138-0.jpg" class="w-full h-full object-cover"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_01222-1.jpg')"><img src="GH_01222-1.jpg" class="w-full h-full object-cover"></div>
-        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_01288-1.jpg')"><img src="GH_01288-1.jpg" class="w-full h-full object-cover"></div>
+        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModalByIndex(0)"><img src="GH_00204-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModalByIndex(1)"><img src="GH_00334-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModalByIndex(2)"><img src="GH_01138-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModalByIndex(3)"><img src="GH_01222-1.jpg" class="w-full h-full object-cover"></div>
+        <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModalByIndex(4)"><img src="GH_01288-1.jpg" class="w-full h-full object-cover"></div>
 
         <!-- 6번째 사진 (+5 더보기 레이어) -->
         <div id="gallery-more-box" class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative bg-white" onclick="showAllPhotos()">
@@ -401,11 +401,11 @@
           </div>
         </div>
 
-        <!-- 7~10번째 사진 (초기 숨김: hidden 클래스 적용) -->
-        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02213-0.jpg')"><img src="GH_02213-0.jpg" class="w-full h-full object-cover"></div>
-        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02374-1.jpg')"><img src="GH_02374-1.jpg" class="w-full h-full object-cover"></div>
-        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02438-0.jpg')"><img src="GH_02438-0.jpg" class="w-full h-full object-cover"></div>
-        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02584-1.jpg')"><img src="GH_02584-1.jpg" class="w-full h-full object-cover"></div>
+        <!-- 7~10번째 사진 (초기 숨김) -->
+        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModalByIndex(6)"><img src="GH_02213-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModalByIndex(7)"><img src="GH_02374-1.jpg" class="w-full h-full object-cover"></div>
+        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModalByIndex(8)"><img src="GH_02438-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModalByIndex(9)"><img src="GH_02584-1.jpg" class="w-full h-full object-cover"></div>
       </div>
     </section>
 
@@ -518,7 +518,7 @@
             </div>
             <div>
               <div class="flex items-center gap-1.5 mb-0.5">
-                <h4 class="font-bold text-pink-700 text-sm">셔틀버스 안내 (행사 진행 시)</h4>
+                <h4 class="font-bold text-pink-700 text-sm">셔틀버스 안내 </h4>
                 <span class="px-2 py-0.5 rounded-full bg-pink-500 text-white text-[10px] font-semibold">추천</span>
               </div>
               <p class="text-stone-700 font-medium">· <strong class="text-pink-600">강남역 1번 출구</strong>에서 셔틀버스 이용</p>

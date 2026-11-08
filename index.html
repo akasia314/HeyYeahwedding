@@ -2261,4 +2261,54 @@ function showAllPhotos() {
   // 숨겨져 있던 7~10번 사진 전체 표시
   document.querySelectorAll('.extra-photo').forEach(el => el.classList.remove('hidden'));
 }
+  // 사진 터치 시 확대 모달 열기
+function openModal(imageSrc) {
+  const modal = document.getElementById('photo-modal');
+  const modalImg = document.getElementById('modal-image-target');
+  
+  if (!modal || !modalImg) return;
+  
+  modalImg.src = imageSrc;
+  modal.classList.remove('hidden');
+  
+  // 부드러운 페이드인 애니메이션
+  setTimeout(() => {
+    modal.classList.remove('opacity-0');
+    modal.classList.add('opacity-100');
+  }, 10);
+  
+  // 모달이 열려 있는 동안 뒷배경 스크롤 방지
+  document.body.style.overflow = 'hidden';
+}
+
+// 닫기 버튼 또는 배경 터치 시 모달 닫기
+function closeModal() {
+  const modal = document.getElementById('photo-modal');
+  if (!modal) return;
+  
+  modal.classList.remove('opacity-100');
+  modal.classList.add('opacity-0');
+  
+  setTimeout(() => {
+    modal.classList.add('hidden');
+    const modalImg = document.getElementById('modal-image-target');
+    if (modalImg) modalImg.src = '';
+  }, 300);
+  
+  // 스크롤 복원
+  document.body.style.overflow = 'auto';
+}
+                
+<!-- 웨딩 사진 원본 확대 모달 레이어 -->
+<div id="photo-modal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 opacity-0" onclick="closeModal()">
+  <!-- 닫기 버튼 (X) -->
+  <button class="absolute top-5 right-5 text-white/90 hover:text-white text-3xl font-light p-2 z-10 focus:outline-none" onclick="closeModal()">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+  
+  <!-- 원본 사진 확대 컨테이너 -->
+  <div class="relative max-w-full max-h-[88vh] flex items-center justify-center" onclick="event.stopPropagation()">
+    <img id="modal-image-target" src="" alt="확대 웨딩 사진" class="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl transition-transform duration-300">
+  </div>
+</div>
 </body></html>

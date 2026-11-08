@@ -1214,33 +1214,36 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
 
       <!-- 갤러리 사진 일괄 업로드 테스트 버튼 -->
       
-
-      <!-- 10칸 감성 그리드 갤러리 (3열) -->
 <!-- 10칸 감성 그리드 갤러리 (3열) -->
       <div id="gallery-grid" class="grid grid-cols-3 gap-2">
-        <!-- 1~5번째 사진 -->
+        <!-- 1~5번째 사진 (클릭 시 확대 모달) -->
         <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_00204-0.jpg')"><img src="GH_00204-0.jpg" class="w-full h-full object-cover"></div>
         <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_00334-0.jpg')"><img src="GH_00334-0.jpg" class="w-full h-full object-cover"></div>
         <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_01138-0.jpg')"><img src="GH_01138-0.jpg" class="w-full h-full object-cover"></div>
         <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_01222-1.jpg')"><img src="GH_01222-1.jpg" class="w-full h-full object-cover"></div>
         <div class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_01288-1.jpg')"><img src="GH_01288-1.jpg" class="w-full h-full object-cover"></div>
 
-        <!-- 6번째 사진 (+5 더보기 오버레이) -->
-        <div id="gallery-more-box" class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative bg-white" onclick="showAllPhotos()">
+        <!-- 6번째 사진 (+5 오버레이 클릭 시 즉시 7~10번 펼치고 모달로 전환) -->
+        <div id="gallery-more-box" class="cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 relative bg-white" onclick="
+          const ov = this.querySelector('#more-dimmed-layer');
+          if(ov) {
+            ov.remove();
+            document.querySelectorAll('.extra-photo').forEach(el => el.style.display = 'block');
+            this.onclick = function() { openModal('GH_01627-0.jpg'); };
+          }
+        ">
           <img src="GH_01627-0.jpg" class="w-full h-full object-cover">
-          <div class="absolute inset-0 bg-stone-900/50 backdrop-blur-[2px] flex flex-col items-center justify-center text-white">
-            <span class="text-xl font-light mb-0.5">+</span>
+          <div id="more-dimmed-layer" class="absolute inset-0 bg-stone-900/60 backdrop-blur-[2px] flex flex-col items-center justify-center text-white pointer-events-none">
+            <span class="text-2xl font-light leading-none mb-1">+</span>
             <span class="font-en text-lg font-bold">5</span>
           </div>
         </div>
 
-        <!-- 7~10번째 사진 (처음엔 hidden으로 숨김) -->
-        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02213-0.jpg')"><img src="GH_02213-0.jpg" class="w-full h-full object-cover"></div>
-        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02374-1.jpg')"><img src="GH_02374-1.jpg" class="w-full h-full object-cover"></div>
-        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02438-0.jpg')"><img src="GH_02438-0.jpg" class="w-full h-full object-cover"></div>
-        <div class="extra-photo hidden cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" onclick="openModal('GH_02584-1.jpg')"><img src="GH_02584-1.jpg" class="w-full h-full object-cover"></div>
-      </div>
-    </section>
+        <!-- 7~10번째 사진 (초기에는 display:none으로 숨김) -->
+        <div class="extra-photo cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" style="display:none;" onclick="openModal('GH_02213-0.jpg')"><img src="GH_02213-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="extra-photo cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" style="display:none;" onclick="openModal('GH_02374-1.jpg')"><img src="GH_02374-1.jpg" class="w-full h-full object-cover"></div>
+        <div class="extra-photo cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" style="display:none;" onclick="openModal('GH_02438-0.jpg')"><img src="GH_02438-0.jpg" class="w-full h-full object-cover"></div>
+        <div class="extra-photo cursor-pointer aspect-[3/4] rounded-2xl overflow-hidden shadow-xs border border-pink-100/80 bg-white" style="display:none;" onclick="openModal('GH_02584-1.jpg')"><img src="GH_02584-1.jpg" class="w-full h-full
 
 <!-- ==========================================
          5. 오시는 길 (LOCATION - 세인트메리엘 강남)
